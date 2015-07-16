@@ -38,16 +38,27 @@ mkdir rootfs/selinux
 rm rootfs/etc/init/ureadahead*
 rm rootfs/etc/init/plymouth*
 
-#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
-sed -i 's/and plymouth-ready//' rootfs/etc/init/lightdm.conf
+if [ "$BUILD_DESKTOP" = "yes" ]; then
+	echo -e "Configuring desktop"
+	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
+	sed -i 's/and plymouth-ready//' rootfs/etc/init/lightdm.conf
+	mkdir rootfs/etc/lightdm/lightdm.conf.d
+	cat > rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf <<EOT
+[SeatDefaults]
+autologin-user=$USERNAMEPWD
+autologin-user-timeout=0
+EOT
+
+fi
 
 echo "UTC" > rootfs/etc/timezone
 chroot rootfs/ /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata >/dev/null 2>&1"
 # set root password
 chroot rootfs/ /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 # create non-root user
-chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio $USERNAMEPWD"
+chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev $USERNAMEPWD"
 chroot rootfs/ /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
+chroot rootfs/ /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
 # configure fstab
 echo "/dev/mmcblk0p2  /      ext4  defaults,noatime,nodiratime,data=writeback,commit=600,errors=remount-ro  0  0" >> rootfs/etc/fstab
@@ -64,7 +75,9 @@ sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"$CPUMAX\"/g" -i rootfs/etc/init.d/cpufrequ
 # set hostname
 echo $HOSTNAME > rootfs/etc/hostname
 
-# set hostname in hosts file
+echo -e "Configuring network"
+install -m 644 patches/network-interfaces rootfs/etc/network/interfaces
+install -m 644 patches/70-persistent-net.rules rootfs/etc/udev/rules.d/70-persistent-net.rules
 cat > rootfs/etc/hosts <<EOT
 127.0.0.1   localhost $HOST
 ::1         localhost $HOST ip6-localhost ip6-loopback
@@ -74,14 +87,3 @@ ff02::1     ip6-allnodes
 ff02::2     ip6-allrouters
 EOT
 
-echo -e "Enabling network support on eth0"
-echo "
-# Loopback network interface
-auto lo
-iface lo inet loopback
-
-# Primary network interface
-#auto eth0
-#iface eth0 inet dhcp" > rootfs/etc/network/interfaces
-
-install -m 644 patches/70-persistent-net.rules rootfs/etc/udev/rules.d/70-persistent-net.rules

@@ -27,10 +27,11 @@ USERNAMEPWD="udooer"
 CPUMIN="392000"
 CPUMAX="996000"
 HOSTNAME="udoo"
-SDSIZE=1800
+SDSIZE=650
 OUTPUT="udoobuntu-quad-desktop.img"
+BUILD_DESKTOP="yes"
 
-#source include/debootstrap.sh
+source include/checkenv.sh
+source include/debootstrap.sh
 source include/configure.sh
-(cd ../linux_kernel && ./scripts/make-udoo-kpkg)
-source include/imager.sh /tmp/udookernel.deb /home/francesco/dev/uboot-imx/u-boot.imx
+source include/imager.sh /home/francesco/dev/uboot-imx/u-boot.imx

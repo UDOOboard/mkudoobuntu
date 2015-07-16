@@ -31,5 +31,7 @@ function checkPackage()
 		apt-get -y install ${1}
 	fi
 }
+
 checkPackage "debootstrap"
 checkPackage "qemu-user-static"
+checkPackage "apt-cacher-ng"

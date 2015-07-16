@@ -22,11 +22,10 @@
 #
 ################################################################################
 
-BASE_PACKAGES="alsa-utils bash-completion bluez cpufrequtils curl dosfstools fbset hostapd i2c-tools iw nano \
-module-init-tools ntfs-3g ntp pv screen sysfsutils unzip usbutils vlan wireless-tools wget wpasupplicant \
-console-data console-common unicode-data"
-
-DESKTOP_PACKAGES="lubuntu-core lubuntu-default-session"
+BASE_PACKAGES="console-data console-common pv sysfsutils cpufrequtils i2c-tools hostapd ntfs-3g"
+DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal unrar lxmusic galculator lxtask lxappearance \
+lxrandr lxshortcut lxinput evince transmission-gtk abiword gimp file-roller lubuntu-software-center \
+"
 
 if [ -d rootfs ]
 then
@@ -34,7 +33,7 @@ then
 	rm -rf rootfs
 fi
 echo -e "Debootstrapping"
-debootstrap --foreign --arch=armhf --include="openssh-server,debconf-utils" trusty rootfs
+debootstrap --foreign --arch=armhf --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
 
 echo -e "Using emulator to finish install"
 cp /usr/bin/qemu-arm-static rootfs/usr/bin
@@ -63,16 +62,21 @@ LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "update-locale LANG=en_US
 echo -e "Install packages"
 chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $BASE_PACKAGES"
 
-#echo -e "Install desktop environment"
-#chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $DESKTOP_PACKAGES"
+echo -e "Install kernel"
+chroot rootfs/ /bin/bash -c "apt-get -y --allow-unauthenticated install linux-kernel-udoo-qdl"
+
+if [ "$BUILD_DESKTOP" = "yes" ]; then
+	echo -e "Install desktop environment"
+	chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $DESKTOP_PACKAGES"
+fi
 
 echo -e "Cleanup"
 rm -rf rootfs/fake
 chroot rootfs/ /bin/bash -c "apt-get clean && apt-get autoclean"
 
 echo -e "Unmount"
-umount -l rootfs/dev/pts
-umount -l rootfs/dev
-umount -l rootfs/proc
-umount -l rootfs/sys
+umount -lf rootfs/dev/pts
+umount -lf rootfs/dev
+umount -lf rootfs/proc
+umount -lf rootfs/sys
 

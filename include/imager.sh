@@ -22,8 +22,11 @@
 #
 ################################################################################
 
-KERNEL=$1
-UBOOT=$2
+UBOOT=$1
+
+if [ "$BUILD_DESKTOP" = "yes" ]; then
+	SDSIZE=$(( $SDSIZE + 1100 ))
+fi
 
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
 LOOP=$(losetup -f)
@@ -43,22 +46,19 @@ partprobe $LOOP
 mkfs.vfat -n "BOOT" $LOOP"p1" >/dev/null 2>&1
 mkfs.ext4 -q $LOOP"p2"
 
-mkdir sdcard
+mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
 mkdir sdcard/boot
 mkdir sdcard/dev
 mkdir sdcard/proc
 mkdir sdcard/run
-mkdir sdcard/tmp
 mkdir sdcard/mnt
+mkdir sdcard/tmp
+chmod o+t,ugo+rw sdcard/tmp
 mount $LOOP"p1" sdcard/boot
 
-rsync -a --exclude dev --exclude proc --exclude run --exclude tmp --exclude mnt --exclude sys rootfs/ sdcard/
-
-cp $KERNEL sdcard/tmp/kernel.deb
-chroot sdcard/ /bin/bash -c "dpkg -i /tmp/kernel.deb && rm /tmp/kernel.deb"
-
-rm sdcard/usr/bin/qemu-arm-static
+rsync -a --exclude dev --exclude proc --exclude run --exclude tmp --exclude mnt --exclude sys --exclude qemu-arm-static  rootfs/ sdcard/
+#rm sdcard/usr/bin/qemu-arm-static
 
 # write bootloader
 dd if=$UBOOT of=$LOOP bs=1k seek=1
