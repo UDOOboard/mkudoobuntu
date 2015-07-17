@@ -25,7 +25,7 @@
 UBOOT=$1
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-	SDSIZE=$(( $SDSIZE + 1100 ))
+	SDSIZE=$(( $SDSIZE + 1500 ))
 fi
 
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1

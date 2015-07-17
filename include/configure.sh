@@ -42,6 +42,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Configuring desktop"
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
 	sed -i 's/and plymouth-ready//' rootfs/etc/init/lightdm.conf
+	echo manual > rootfs/etc/init/lightdm.override
 	mkdir rootfs/etc/lightdm/lightdm.conf.d
 	cat > rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf <<EOT
 [SeatDefaults]
@@ -56,7 +57,7 @@ chroot rootfs/ /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata >/dev/nul
 # set root password
 chroot rootfs/ /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 # create non-root user
-chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev $USERNAMEPWD"
+chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 chroot rootfs/ /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot rootfs/ /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
@@ -77,7 +78,6 @@ echo $HOSTNAME > rootfs/etc/hostname
 
 echo -e "Configuring network"
 install -m 644 patches/network-interfaces rootfs/etc/network/interfaces
-install -m 644 patches/70-persistent-net.rules rootfs/etc/udev/rules.d/70-persistent-net.rules
 cat > rootfs/etc/hosts <<EOT
 127.0.0.1   localhost $HOST
 ::1         localhost $HOST ip6-localhost ip6-loopback
