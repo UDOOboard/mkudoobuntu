@@ -87,8 +87,10 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 fi
 
 echo -e "Cleanup"
-rm -rf rootfs/fake
+chroot rootfs/ /bin/bash -c "apt-get purge apport apport-symptoms python3-apport colord hplip libsane libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
+chroot rootfs/ /bin/bash -c "apt-get autoremove"
 chroot rootfs/ /bin/bash -c "apt-get clean && apt-get autoclean"
+rm -rf rootfs/fake
 
 echo -e "Unmount"
 umount -lf rootfs/dev/pts

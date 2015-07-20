@@ -24,16 +24,19 @@
 
 
 echo -e "Configuring system"
+# configure console
 cp patches/ttymxc1.conf rootfs/etc/init/ttymxc1.conf
-# disable some getties
 rm rootfs/etc/init/tty3.conf
 rm rootfs/etc/init/tty4.conf
 rm rootfs/etc/init/tty5.conf
 rm rootfs/etc/init/tty6.conf
-# enable root login for latest ssh on trusty
+
+# enable root login
 sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' rootfs/etc/ssh/sshd_config
+
 # fix selinux
 mkdir rootfs/selinux
+
 # remove what's anyway not working
 rm rootfs/etc/init/ureadahead*
 rm rootfs/etc/init/plymouth*
