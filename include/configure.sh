@@ -78,12 +78,5 @@ echo $HOSTNAME > rootfs/etc/hostname
 
 echo -e "Configuring network"
 install -m 644 patches/network-interfaces rootfs/etc/network/interfaces
-cat > rootfs/etc/hosts <<EOT
-127.0.0.1   localhost $HOST
-::1         localhost $HOST ip6-localhost ip6-loopback
-fe00::0     ip6-localnet
-ff00::0     ip6-mcastprefix
-ff02::1     ip6-allnodes
-ff02::2     ip6-allrouters
-EOT
-
+install -m 644 patches/hosts rootfs/etc/hosts
+sed -e "s/THISHOST/$HOSTNAME/g" -i rootfs/etc/hosts
