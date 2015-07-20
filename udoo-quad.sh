@@ -28,10 +28,11 @@ CPUMIN="392000"
 CPUMAX="996000"
 HOSTNAME="udoo"
 SDSIZE=650
+UBOOT="binary/uboot-quad.imx"
 OUTPUT="udoobuntu-quad-desktop.img"
 BUILD_DESKTOP="yes"
 
 source include/checkenv.sh
 source include/debootstrap.sh
 source include/configure.sh
-source include/imager.sh /home/francesco/dev/uboot-imx/u-boot.imx
+source include/imager.sh
