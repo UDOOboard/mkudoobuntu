@@ -1,0 +1,3 @@
+[SeatDefaults]
+autologin-user=USERNAMEPWD
+autologin-user-timeout=0

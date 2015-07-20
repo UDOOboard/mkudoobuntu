@@ -44,27 +44,23 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	sed -i 's/and plymouth-ready//' rootfs/etc/init/lightdm.conf
 	echo manual > rootfs/etc/init/lightdm.override
 	mkdir rootfs/etc/lightdm/lightdm.conf.d
-	cat > rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf <<EOT
-[SeatDefaults]
-autologin-user=$USERNAMEPWD
-autologin-user-timeout=0
-EOT
-
+	install -m 644 patches/autologin rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf
+	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf
 fi
 
 echo "UTC" > rootfs/etc/timezone
 chroot rootfs/ /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata >/dev/null 2>&1"
-# set root password
+
+# setup users
 chroot rootfs/ /bin/bash -c "echo root:$ROOTPWD | chpasswd"
-# create non-root user
 chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 chroot rootfs/ /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot rootfs/ /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
 # configure fstab
-echo "/dev/mmcblk0p2  /      ext4  defaults,noatime,nodiratime,data=writeback,commit=600,errors=remount-ro  0  0" >> rootfs/etc/fstab
-echo "/dev/mmcblk0p1  /boot  vfat  defaults,noatime,nodiratime                                              0  0" >> rootfs/etc/fstab
+install -m 644 patches/fstab rootfs/etc/fstab
 
+# first boot services
 install -m 755 patches/resize2fs rootfs/etc/init.d
 install -m 755 patches/firstrun  rootfs/etc/init.d
 chroot rootfs/ /bin/bash -c "update-rc.d firstrun defaults >/dev/null 2>&1"
