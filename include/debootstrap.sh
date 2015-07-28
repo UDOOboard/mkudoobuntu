@@ -23,22 +23,13 @@
 ################################################################################
 
 BASE_PACKAGES="console-data console-common pv sysfsutils cpufrequtils i2c-tools hostapd ntfs-3g \
-locate"
+locate firmware-ralink udev-udoo-rules"
 
 DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal unrar lxmusic galculator lxtask lxappearance \
 lxrandr lxshortcut lxinput evince transmission-gtk abiword gimp file-roller lubuntu-software-center \
-chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra chromium-egl firmware-imx-udoo \
-fsl-alsa-plugins-udoo glmark2 glmark2-data glmark2-es2 gst-fsl-plugins-udoo gstreamer0.10-alsa \
-gstreamer0.10-plugins-base gstreamer0.10-x imx-gpu-viv-udoo-acc-x11 imx-gpu-viv-udoo-libs \
-imx-gpu-viv-udoo-test imx-gpu-viv-udoo-x11 imx-lib-udoo imx-test-udoo imx-vpu-cnm-udoo imx-vpu-udoo \
-imx-xserver-xorg-extension-viv-udoo-hdmi imx-xserver-xorg-video-viv-udoo dpkg-dev \
-libegl1-mesa libegl1-mesa-drivers libfslcodec-udoo libfslparser-udoo libfslvpuwrap-udoo libgbm1 \
-libgl1-mesa-glx libglapi-mesa libgles2-mesa libgstreamer-plugins-base0.10-0 libmbim-glib4 \
-libmbim-proxy libmm-glib0 libopenvg1-mesa libqmi-glib1 libqmi-proxy libqt5concurrent5 \
-libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5 libqt5opengl5 libqt5opengl5-dev \
-libqt5printsupport5 libqt5sql5 libqt5sql5-sqlite libqt5test5 libqt5widgets5 libqt5xml5 \
-qt5-default qt5-qmake qtbase5-examples x11-common xinput-calibrator xorg xserver-common \
-xserver-xorg xserver-xorg-core xserver-xorg-input-evdev xserver-xorg-video-fbdev"
+scratch gimp geany bluefish pavucontrol udoo-artwork dpkg-dev imx-vpu-cnm-9t imx-gpu-viv-9t6-acc-x11 \
+chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
+xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
 
 if [ -d rootfs ]
 then
@@ -63,11 +54,15 @@ do
 	ln -s /bin/true rootfs/fake/"$i"
 done
 
+cp patches/gpg.key rootfs/tmp/
+cp patches/udookernel.deb rootfs/tmp/
+
 echo -e "Upgrade, dist-upgrade"
 install -m 644 patches/sources.list rootfs/etc/apt/sources.list
 install -m 644 patches/udoo.list rootfs/etc/apt/sources.list.d/udoo.list
 install -m 644 patches/udoo.preferences rootfs/etc/apt/preferences.d/udoo
 
+LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "apt-key add /tmp/gpg.key"
 LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "apt-get -y update"
 LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y --allow-unauthenticated dist-upgrade'
 LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y -qq install locales'
@@ -79,11 +74,11 @@ echo -e "Install packages"
 chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $BASE_PACKAGES"
 
 echo -e "Install kernel"
-chroot rootfs/ /bin/bash -c "apt-get -y --allow-unauthenticated install linux-kernel-udoo-qdl"
+chroot rootfs/ /bin/bash -c "dpkg -i /tmp/udookernel.deb"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Install desktop environment"
-	chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y --allow-unauthenticated install $DESKTOP_PACKAGES"
+	chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $DESKTOP_PACKAGES"
 fi
 
 echo -e "Cleanup"
