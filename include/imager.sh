@@ -23,7 +23,7 @@
 ################################################################################
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-	SDSIZE=$(( $SDSIZE + 1500 ))
+	SDSIZE=$(( $SDSIZE + 1600 ))
 fi
 
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
@@ -55,8 +55,13 @@ mkdir sdcard/tmp
 chmod o+t,ugo+rw sdcard/tmp
 mount $LOOP"p1" sdcard/boot
 
-rsync -a --exclude dev --exclude proc --exclude run --exclude tmp --exclude mnt --exclude sys --exclude qemu-arm-static  rootfs/ sdcard/
-#rm sdcard/usr/bin/qemu-arm-static
+rm -rf rootfs/home/ubuntu #temp fix, we need to move the files later
+
+rsync -a --exclude run --exclude tmp --exclude qemu-arm-static rootfs/ sdcard/
+ln -s /run sdcard/var/run
+ln -s /run/network sdcard/etc/network/run
+mkdir sdcard/var/tmp
+chmod o+t,ugo+rw sdcard/var/tmp
 
 # write bootloader
 dd if=$UBOOT of=$LOOP bs=1k seek=1
