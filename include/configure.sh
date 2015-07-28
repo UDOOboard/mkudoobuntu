@@ -33,6 +33,7 @@ rm rootfs/etc/init/tty6.conf
 
 # enable root login
 sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' rootfs/etc/ssh/sshd_config
+echo manual > rootfs/etc/init/ssh.override
 
 # fix selinux
 mkdir rootfs/selinux

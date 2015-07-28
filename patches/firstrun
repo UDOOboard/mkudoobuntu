@@ -43,6 +43,7 @@ case "$1" in
                 echo "Expanding rootfs has failed, see log files." >/dev/tty1
         fi
 		update-rc.d -f firstrun remove >/dev/null 2>&1
+        rm /etc/init/ssh.override
         rm /etc/init/lightdm.override
 		if $reboot;then
 			/sbin/reboot
