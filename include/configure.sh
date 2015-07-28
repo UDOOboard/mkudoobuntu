@@ -47,8 +47,10 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	sed -i 's/and plymouth-ready//' rootfs/etc/init/lightdm.conf
 	echo manual > rootfs/etc/init/lightdm.override
 	mkdir rootfs/etc/lightdm/lightdm.conf.d
-	install -m 644 patches/autologin rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf
+	install -m 644 patches/autologin.lightdm rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf
 	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i rootfs/etc/lightdm/lightdm.conf.d/10-autologin.conf
+	install -m 644 patches/autologin.accountservice rootfs/var/lib/AccountsService/users/$USERNAMEPWD
+	sed -e "s/\/usr\/share\/lubuntu\/wallpapers\/lubuntu-default-wallpaper\.png/\/usr\/share\/udoo\/wallpapers\/UDOO-green.png/" -i rootfs/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf
 fi
 
 echo "UTC" > rootfs/etc/timezone
