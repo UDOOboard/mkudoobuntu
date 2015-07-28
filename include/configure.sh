@@ -59,7 +59,11 @@ chroot rootfs/ /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata >/dev/nul
 
 # setup users
 chroot rootfs/ /bin/bash -c "echo root:$ROOTPWD | chpasswd"
-chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
+if [ "$BUILD_DESKTOP" = "yes" ]; then
+	chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
+else
+	chroot rootfs/ /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
+fi
 chroot rootfs/ /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot rootfs/ /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
