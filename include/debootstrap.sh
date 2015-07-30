@@ -31,6 +31,9 @@ scratch gimp geany bluefish pavucontrol udoo-artwork dpkg-dev imx-vpu-cnm-9t imx
 chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
 xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
 
+UNWANTED_PACKAGES="apport apport-symptoms python3-apport colord hplip libsane \
+libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
+
 if [ -d rootfs ]
 then
 	echo -e "Deleting old root filesystem"
@@ -83,7 +86,7 @@ fi
 
 echo -e "Cleanup"
 touch rootfs/etc/init.d/modemmanager
-chroot rootfs/ /bin/bash -c "apt-get purge -y apport apport-symptoms python3-apport colord hplip libsane libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
+chroot rootfs/ /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq $UNWANTED_PACKAGES"
 chroot rootfs/ /bin/bash -c "apt-get autoremove"
 chroot rootfs/ /bin/bash -c "apt-get clean && apt-get autoclean"
 rm -rf rootfs/fake
