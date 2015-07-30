@@ -28,8 +28,8 @@ locate firmware-ralink udev-udoo-rules"
 DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal unrar lxmusic galculator lxtask lxappearance \
 lxrandr lxshortcut lxinput evince transmission-gtk abiword gimp file-roller lubuntu-software-center \
 scratch gimp geany bluefish pavucontrol udoo-artwork dpkg-dev imx-vpu-cnm-9t imx-gpu-viv-9t6-acc-x11 \
-chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
-xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
+chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-egl \
+xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb arduino-ide-udoo-qdl"
 
 UNWANTED_PACKAGES="apport apport-symptoms python3-apport colord hplip libsane \
 libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"

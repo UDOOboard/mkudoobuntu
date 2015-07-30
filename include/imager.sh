@@ -23,9 +23,10 @@
 ################################################################################
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-	SDSIZE=$(( $SDSIZE + 1600 ))
+	SDSIZE=$(( $SDSIZE + 2000 ))
 fi
 
+echo -e "Creating a $SDSIZE MB image..."
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
 LOOP=$(losetup -f)
 losetup $LOOP $OUTPUT
@@ -36,6 +37,7 @@ BOOTSTART=$(($OFFSET*2048))
 ROOTSTART=$(($BOOTSTART+($BOOTSIZE*2048)))
 BOOTEND=$(($ROOTSTART-1))
 
+echo -e "Creating image partitions"
 # Create partitions and file-system
 parted -s $LOOP -- mklabel msdos
 parted -s $LOOP -- mkpart primary fat16  $BOOTSTART"s" $BOOTEND"s"
@@ -57,12 +59,14 @@ mount $LOOP"p1" sdcard/boot
 
 rm -rf rootfs/home/ubuntu #temp fix, we need to move the files later
 
+echo -e "Copying filesystem on SD image..."
 rsync -a --exclude run --exclude tmp --exclude qemu-arm-static rootfs/ sdcard/
 ln -s /run sdcard/var/run
 ln -s /run/network sdcard/etc/network/run
 mkdir sdcard/var/tmp
 chmod o+t,ugo+rw sdcard/var/tmp
 
+echo -e "Writing U-BOOT"
 # write bootloader
 dd if=$UBOOT of=$LOOP bs=1k seek=1
 sync
@@ -72,3 +76,5 @@ umount -l sdcard
 
 losetup -d $LOOP
 sync
+
+echo -e "Build complete!"
