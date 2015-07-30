@@ -79,6 +79,11 @@ chroot rootfs/ /bin/bash -c "update-rc.d firstrun defaults >/dev/null 2>&1"
 sed -e "s/MIN_SPEED=\"0\"/MIN_SPEED=\"$CPUMIN\"/g" -i rootfs/etc/init.d/cpufrequtils
 sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"$CPUMAX\"/g" -i rootfs/etc/init.d/cpufrequtils
 
+# configure bash: reverse search and shell completion
+sed -e 's/# "\\e\[5~": history\-search\-backward/"\\e[5~": history-search-backward/' -i rootfs/etc/inputrc
+sed -e 's/# "\\e\[6~": history\-search\-forward/"\\e[6~": history-search-forward/' -i rootfs/etc/inputrc
+sed '/#if ! shopt -oq posix/,+6s/#//' rootfs/etc/bash.bashrc
+
 # set hostname
 echo $HOSTNAME > rootfs/etc/hostname
 
