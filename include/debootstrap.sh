@@ -28,7 +28,7 @@ locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules"
 DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal galculator lxtask lxappearance \
 lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center \
 scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 \
-chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
+chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra \
 gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio \
 xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
 
