@@ -23,14 +23,17 @@
 ################################################################################
 
 BASE_PACKAGES="console-data console-common pv sysfsutils cpufrequtils i2c-tools hostapd ntfs-3g \
-locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules rsync"
+locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules"
 
-DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal lxmusic galculator lxtask lxappearance \
+DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal galculator lxtask lxappearance \
 lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center \
 scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 \
 chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
 gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio \
-xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb "
+xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
+
+UNWANTED_PACKAGES="apport apport-symptoms python3-apport colord hplip libsane \
+libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
 
 if [ -d rootfs ]
 then
@@ -38,9 +41,7 @@ then
 	rm -rf rootfs
 fi
 echo -e "Debootstrapping"
-debootstrap --foreign --arch=armhf \
-  --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" \
-  trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
+debootstrap --foreign --arch=armhf --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
 
 echo -e "Using emulator to finish install"
 cp /usr/bin/qemu-arm-static rootfs/usr/bin
@@ -86,7 +87,7 @@ fi
 
 echo -e "Cleanup"
 touch rootfs/etc/init.d/modemmanager
-chroot rootfs/ /bin/bash -c "apt-get purge -y apport apport-symptoms python3-apport colord hplip libsane libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
+chroot rootfs/ /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq $UNWANTED_PACKAGES"
 chroot rootfs/ /bin/bash -c "apt-get autoremove"
 chroot rootfs/ /bin/bash -c "apt-get clean && apt-get autoclean"
 rm -rf rootfs/fake
