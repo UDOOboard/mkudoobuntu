@@ -23,13 +23,14 @@
 ################################################################################
 
 BASE_PACKAGES="console-data console-common pv sysfsutils cpufrequtils i2c-tools hostapd ntfs-3g \
-locate firmware-ralink udev-udoo-rules"
+locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules rsync"
 
-DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal unrar lxmusic galculator lxtask lxappearance \
-lxrandr lxshortcut lxinput evince transmission-gtk abiword gimp file-roller lubuntu-software-center \
-scratch gimp geany bluefish pavucontrol udoo-artwork dpkg-dev imx-vpu-cnm-9t imx-gpu-viv-9t6-acc-x11 \
+DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal lxmusic galculator lxtask lxappearance \
+lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center \
+scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 \
 chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg chromium-codecs-ffmpeg-extra \
-xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
+gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio \
+xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb "
 
 if [ -d rootfs ]
 then
@@ -37,7 +38,9 @@ then
 	rm -rf rootfs
 fi
 echo -e "Debootstrapping"
-debootstrap --foreign --arch=armhf --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
+debootstrap --foreign --arch=armhf \
+  --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" \
+  trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
 
 echo -e "Using emulator to finish install"
 cp /usr/bin/qemu-arm-static rootfs/usr/bin
