@@ -78,7 +78,7 @@ echo -e "Install packages"
 chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $BASE_PACKAGES"
 
 echo -e "Install kernel"
-chroot rootfs/ /bin/bash -c "dpkg -i /tmp/udookernel.deb"
+chroot rootfs/ /bin/bash -c "apt-get -y install linux-kernel-udoo-qdl"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Install desktop environment"
