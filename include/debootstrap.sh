@@ -39,6 +39,10 @@ libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanage
 if [ -d rootfs ]
 then
 	echo -e "Deleting old root filesystem"
+  umount rootfs/proc
+  umount rootfs/sys
+  umount rootfs/dev/pts
+  umount rootfs/dev 
 	rm -rf rootfs
 fi
 echo -e "Debootstrapping"
