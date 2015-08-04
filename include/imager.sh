@@ -37,14 +37,17 @@ BOOTSTART=$(($OFFSET*2048))
 ROOTSTART=$(($BOOTSTART+($BOOTSIZE*2048)))
 BOOTEND=$(($ROOTSTART-1))
 
+LABELBOOT="boot"
+LABELFS="udoobuntu"
+
 echo -e "Creating image partitions"
 # Create partitions and file-system
 parted -s $LOOP -- mklabel msdos
 parted -s $LOOP -- mkpart primary fat16  $BOOTSTART"s" $BOOTEND"s"
 parted -s $LOOP -- mkpart primary ext4  $ROOTSTART"s" -1s
 partprobe $LOOP
-mkfs.vfat -n "BOOT" $LOOP"p1" >/dev/null 2>&1
-mkfs.ext4 -q $LOOP"p2"
+mkfs.vfat -n "$LABELBOOT" $LOOP"p1" >/dev/null 2>&1
+mkfs.ext4 -q $LOOP"p2" -L "$LABELFS"
 
 mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
