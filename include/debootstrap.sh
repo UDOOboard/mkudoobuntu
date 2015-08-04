@@ -29,7 +29,8 @@ DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal galculator lxtask lxappearance
 lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center \
 scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 \
 chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra \
-gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio \
+gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad \
+gstreamer0.10-plugins-good gstreamer0.10-pulseaudio command-not-found \
 xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
 
 UNWANTED_PACKAGES="apport apport-symptoms python3-apport colord hplip libsane \
@@ -88,8 +89,8 @@ fi
 echo -e "Cleanup"
 touch rootfs/etc/init.d/modemmanager
 chroot rootfs/ /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq $UNWANTED_PACKAGES"
-chroot rootfs/ /bin/bash -c "apt-get autoremove"
-chroot rootfs/ /bin/bash -c "apt-get clean && apt-get autoclean"
+chroot rootfs/ /bin/bash -c "apt-get autoremove -y"
+chroot rootfs/ /bin/bash -c "apt-get clean -y && apt-get autoclean -y "
 rm -rf rootfs/fake
 
 echo -e "Unmount"
@@ -97,4 +98,3 @@ umount -lf rootfs/dev/pts
 umount -lf rootfs/dev
 umount -lf rootfs/proc
 umount -lf rootfs/sys
-
