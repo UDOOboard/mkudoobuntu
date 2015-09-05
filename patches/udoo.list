@@ -1,1 +1,1 @@
-deb http://repository.udoo.org udoobuntu main
+deb http://127.0.0.1:3142/repository.udoo.org udoobuntu main

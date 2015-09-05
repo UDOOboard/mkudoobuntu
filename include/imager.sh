@@ -22,23 +22,27 @@
 #
 ################################################################################
 
-if [ "$BUILD_DESKTOP" = "yes" ]; then
-	SDSIZE=$(( $SDSIZE + 2000 ))
-fi
+checkroot
+
+echo -e "Unmount..."
+umountroot
+umount -lf sdcard/boot
+umount -lf sdcard
+
+ROOTSIZE="$(du -s $ROOTFS | cut -f 1)"
+SDSIZE="$(( $ROOTSIZE / 1000 + $ROOTSIZE / 10000 ))"
 
 echo -e "Creating a $SDSIZE MB image..."
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
+
 LOOP=$(losetup -f)
-losetup $LOOP $OUTPUT
+losetup $LOOP $OUTPUT || error "Cannot set $LOOP" 
 
 OFFSET="1"
 BOOTSIZE="32"
 BOOTSTART=$(($OFFSET*2048))
 ROOTSTART=$(($BOOTSTART+($BOOTSIZE*2048)))
 BOOTEND=$(($ROOTSTART-1))
-
-LABELBOOT="boot"
-LABELFS="udoobuntu"
 
 echo -e "Creating image partitions"
 # Create partitions and file-system
@@ -51,19 +55,18 @@ mkfs.ext4 -q $LOOP"p2" -L "$LABELFS"
 
 mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
-mkdir sdcard/boot
-mkdir sdcard/dev
-mkdir sdcard/proc
-mkdir sdcard/run
-mkdir sdcard/mnt
-mkdir sdcard/tmp
+
+for i in boot dev proc run mnt tmp
+  do mkdir -p sdcard/$i
+done
+    
 chmod o+t,ugo+rw sdcard/tmp
 mount $LOOP"p1" sdcard/boot
 
-rm -rf rootfs/home/ubuntu #temp fix, we need to move the files later
+rm -rf $ROOTFS/home/ubuntu #temp fix, we need to move the files later
 
 echo -e "Copying filesystem on SD image..."
-rsync -a --exclude run --exclude tmp --exclude qemu-arm-static rootfs/ sdcard/
+rsync -a --exclude run --exclude tmp --exclude qemu-arm-static $ROOTFS/ sdcard/
 ln -s /run sdcard/var/run
 ln -s /run/network sdcard/etc/network/run
 mkdir sdcard/var/tmp
@@ -74,8 +77,8 @@ echo -e "Writing U-BOOT"
 dd if=$UBOOT of=$LOOP bs=1k seek=1
 sync
 
-umount -l sdcard/boot
-umount -l sdcard
+umount -lf sdcard/boot
+umount -lf sdcard
 
 losetup -d $LOOP
 sync

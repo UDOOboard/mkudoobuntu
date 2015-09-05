@@ -18,41 +18,55 @@ N=/etc/init.d/firstrun
 set -e
 
 do_expand_rootfs(){
-        device="/dev/"$(lsblk -idn -o NAME | grep mmc)
-		PARTITIONS=$(($(fdisk -l $device | grep $device | wc -l)-1))
-		((echo d; echo $PARTITIONS; echo n; echo p; echo ; echo ; echo ; echo w;) | fdisk $device)>/dev/null
-return 0
+  device="/dev/"$(lsblk -idn -o NAME | grep mmc)
+  rootpart=$(df / --output=source | tail -n1)
+  PARTITIONS=$(($(fdisk -l $device | grep $device | wc -l)-1))
+  
+  echo Editing the partition table... >/dev/ttymxc1
+  ( (echo d; echo $PARTITIONS; echo n; echo p; echo ; echo ; echo ; echo w; ) | 
+    fdisk $device )>/dev/null
+  sync
+  
+  echo Probing the partition table... >/dev/ttymxc1
+  partprobe  >/dev/ttymxc1
+  
+  echo Resizing the partition... >/dev/ttymxc1 
+  resize2fs ${rootpart}  >/dev/ttymxc1 || return $?
 }
 
 case "$1" in
   start)
-		reboot=false
-		echo "System will reboot automatically. Please wait!" >/dev/tty1
-		echo "" >/dev/tty1
+    reboot=false
 
-		echo -e "[\e[0;32m ok \x1B[0m] SSH keys recreation. One moment please" >/dev/tty1
-		rm -f /etc/ssh/ssh_host*
-		dpkg-reconfigure openssh-server
-		set +e
-        echo "Expanding rootfs..." >/dev/tty1
-        if do_expand_rootfs;then
-                echo "Expanding rootfs success, rebooting automatically." >/dev/tty1
-				update-rc.d resize2fs defaults >/dev/null 2>&1
-                reboot=true
-        else
-                echo "Expanding rootfs has failed, see log files." >/dev/tty1
-        fi
-		update-rc.d -f firstrun remove >/dev/null 2>&1
-        rm /etc/init/ssh.override
-        rm /etc/init/lightdm.override
-		if $reboot;then
-			/sbin/reboot
-		fi
-        ;;
+    echo -e "SSH keys recreation. One moment please" >/dev/ttymxc1
+    rm -f /etc/ssh/ssh_host*
+    dpkg-reconfigure openssh-server >/dev/ttymxc1
+    set +e
+    
+    echo "Expanding rootfs..." >/dev/ttymxc1
+
+    if do_expand_rootfs >/dev/ttymxc1 ;
+    then
+      echo "Expanding partition success" >/dev/ttymxc1
+    else
+      echo "Expanding rootfs has failed, see log files. Error code: $?" >/dev/ttymxc1
+    fi
+
+    update-rc.d -f firstrun remove >/dev/null 2>&1 >/dev/ttymxc1
+    
+    rm /etc/init/ssh.override
+    service ssh start
+    
+    if `rm /etc/init/lightdm.override 2>/dev/null`
+      then
+      service lightdm start
+    fi
+  ;;
+  
   *)
-        echo "Usage: $N {start}" >&2
-        exit 1
-        ;;
+    echo "Usage: $N {start}" >&2
+    exit 1
+  ;;
 esac
-
+  
 exit 0

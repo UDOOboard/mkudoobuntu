@@ -22,83 +22,64 @@
 #
 ################################################################################
 
-BASE_PACKAGES="console-data console-common pv sysfsutils cpufrequtils i2c-tools hostapd ntfs-3g \
-locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules"
+checkroot
 
-DESKTOP_PACKAGES="lubuntu-core leafpad lxterminal galculator lxtask lxappearance \
-lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center \
-scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 \
-chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra \
-gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad \
-gstreamer0.10-plugins-good gstreamer0.10-pulseaudio command-not-found \
-xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb"
-
-UNWANTED_PACKAGES="apport apport-symptoms python3-apport colord hplip libsane \
-libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager"
-
-if [ -d rootfs ]
+if [ -d $ROOTFS ]
 then
-	echo -e "Deleting old root filesystem"
-  umount rootfs/proc
-  umount rootfs/sys
-  umount rootfs/dev/pts
-  umount rootfs/dev 
-	rm -rf rootfs
+  umountroot
+  echo -n "Deleting old root filesystem, are you sure? (y/N) "
+  read CHOICE
+  
+  [[ $CHOICE = [Yy] ]] || error
+  
+  rm -rf $ROOTFS
 fi
-echo -e "Debootstrapping"
-debootstrap --foreign --arch=armhf --include="openssh-server,debconf-utils,alsa-utils,bash-completion,bluez,curl,dosfstools,fbset,iw,nano,module-init-tools,ntp,screen,unzip,usbutils,vlan,wireless-tools,wget,wpasupplicant,unicode-data" trusty rootfs http://127.0.0.1:3142/ports.ubuntu.com
 
-echo -e "Using emulator to finish install"
-cp /usr/bin/qemu-arm-static rootfs/usr/bin
-chroot rootfs/ /bin/bash -c "/debootstrap/debootstrap --second-stage"
-mount -t proc chproc rootfs/proc
-mount -t sysfs chsys rootfs/sys
-mount -t devtmpfs chdev rootfs/dev || mount --bind /dev rootfs/dev
-mount -t devpts chpts rootfs/dev/pts
+echo -e "Debootstrapping" >&1 >&2
+DEBOOT_PACKAGES=`echo $DEBOOT_PACKAGES | sed -e 's/ /,/g'`
+debootstrap  --foreign \
+             --arch=armhf \
+             --include="$DEBOOT_PACKAGES" trusty $ROOTFS http://127.0.0.1:3142/ports.ubuntu.com
 
-echo -e "Disabling services"
-mkdir rootfs/fake
+echo -e "Using emulator to finish install" >&1 >&2
+cp /usr/bin/qemu-arm-static $ROOTFS/usr/bin
+chroot $ROOTFS/ /bin/bash -c "/debootstrap/debootstrap --second-stage"
+mountroot
+
+echo -e "Disabling services" >&1 >&2
+mkdir $ROOTFS/fake
 for i in initctl invoke-rc.d restart start stop start-stop-daemon service
 do
-	ln -s /bin/true rootfs/fake/"$i"
+  ln -s /bin/true $ROOTFS/fake/"$i"
 done
 
-cp patches/gpg.key rootfs/tmp/
-cp patches/udookernel.deb rootfs/tmp/
+cp patches/gpg.key $ROOTFS/tmp/
 
-echo -e "Upgrade, dist-upgrade"
-install -m 644 patches/sources.list rootfs/etc/apt/sources.list
-install -m 644 patches/udoo.list rootfs/etc/apt/sources.list.d/udoo.list
-install -m 644 patches/udoo.preferences rootfs/etc/apt/preferences.d/udoo
+echo -e "Upgrade, dist-upgrade" >&1 >&2
+install -m 644 patches/sources.list $ROOTFS/etc/apt/sources.list
+install -m 644 patches/udoo.list $ROOTFS/etc/apt/sources.list.d/udoo.list
+install -m 644 patches/udoo.preferences $ROOTFS/etc/apt/preferences.d/udoo
 
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "apt-key add /tmp/gpg.key"
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "apt-get -y update"
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y --allow-unauthenticated dist-upgrade'
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y -qq install locales'
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "locale-gen en_US.UTF-8 it_IT.UTF-8 en_GB.UTF-8"
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "export LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive"
-LC_ALL=C LANGUAGE=C LANG=C chroot rootfs/ /bin/bash -c "update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_MESSAGES=POSIX"
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c "apt-key add /tmp/gpg.key"
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c "apt-get -y update"
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y --allow-unauthenticated dist-upgrade'
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c 'PATH=/fake:$PATH apt-get -y -qq install locales'
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c "locale-gen en_US.UTF-8 it_IT.UTF-8 en_GB.UTF-8"
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c "export LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive"
+LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS/ /bin/bash -c "update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_MESSAGES=POSIX"
 
-echo -e "Install packages"
-chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $BASE_PACKAGES"
-
-echo -e "Install kernel"
-chroot rootfs/ /bin/bash -c "apt-get -y install linux-kernel-udoo-qdl"
+echo -e "Install packages" >&1 >&2
+chroot $ROOTFS/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${BASE_PACKAGES[*]}"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-	echo -e "Install desktop environment"
-	chroot rootfs/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install $DESKTOP_PACKAGES"
+  echo -e "Install desktop environment" >&1 >&2
+  chroot $ROOTFS/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${DESKTOP_PACKAGES[*]}"
 fi
 
-echo -e "Cleanup"
-touch rootfs/etc/init.d/modemmanager
-chroot rootfs/ /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq $UNWANTED_PACKAGES"
-chroot rootfs/ /bin/bash -c "apt-get autoremove -y"
-chroot rootfs/ /bin/bash -c "apt-get clean -y && apt-get autoclean -y "
-rm -rf rootfs/fake
-
-echo -e "Unmount"
-umount -lf rootfs/dev/pts
-umount -lf rootfs/dev
-umount -lf rootfs/proc
-umount -lf rootfs/sys
+echo -e "Cleanup" >&1 >&2
+touch $ROOTFS/etc/init.d/modemmanager
+chroot $ROOTFS/ /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq ${UNWANTED_PACKAGES[*]}"
+chroot $ROOTFS/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get autoremove -y"
+chroot $ROOTFS/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get clean -y "
+chroot $ROOTFS/ /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get autoclean -y "
+rm -rf $ROOTFS/fake
