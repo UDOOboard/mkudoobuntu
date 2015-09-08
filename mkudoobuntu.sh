@@ -32,14 +32,14 @@ DEBOOT_PACKAGES=( openssh-server debconf-utils alsa-utils bash-completion
 
 BASE_PACKAGES=( console-data console-common pv git sysfsutils cpufrequtils i2c-tools 
   hostapd ntfs-3g locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules command-not-found 
-  kernel-package man-db )
+  kernel-package man-db bash-completion )
   
 DESKTOP_PACKAGES=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
   lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center 
   scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 
   chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra chromium-egl 
   gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad 
-  gstreamer0.10-plugins-good gstreamer0.10-pulseaudio  
+  gstreamer0.10-plugins-good gstreamer0.10-pulseaudio xinput-calibrator
   xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb )
 
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
@@ -66,7 +66,7 @@ error() {
   local E_CODE=$2
   
   [[ -z $E_CODE ]] && E_CODE=1
-  [[ -z $E_TEXT ]] || echo $E_TEXT
+  [[ -z $E_TEXT ]] || echo $E_TEXT >&2
   exit $E_CODE
 }
 
@@ -114,17 +114,19 @@ mountroot(){
     [  -d "$ROOTFS/$i" ] || error "Rootfs not present/not populated ($ROOTFS/$i) "
   done
   checkroot
-  mount -t proc chproc $ROOTFS/proc
-  mount -t sysfs chsys $ROOTFS/sys
-  mount -t devtmpfs chdev $ROOTFS/dev || mount --bind /dev $ROOTFS/dev
-  mount -t devpts chpts $ROOTFS/dev/pts
+  mount -t proc chproc "$ROOTFS/proc"
+  mount -t sysfs chsys "$ROOTFS/sys"
+  mount -t devtmpfs chdev "$ROOTFS/dev" || mount --bind /dev "$ROOTFS/dev"
+  mount -t devpts chpts "$ROOTFS/dev/pts"
 }
 
 umountroot(){
   checkroot
   for i in proc sys dev/pts dev 
   do
-    [ -d "$ROOTFS/$i" ] && umount -lf $ROOTFS/$i
+    if mountpoint -q "$ROOTFS/$i"
+      then umount -lf "$ROOTFS/$i" || error "Cannot unmount \"$i\"" 
+    fi
   done
 }
 
