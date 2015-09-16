@@ -28,7 +28,7 @@ do_expand_rootfs(){
   sync
   
   echo Probing the partition table... >/dev/ttymxc1
-  partprobe  >/dev/ttymxc1
+  partx -u ${rootpart} >/dev/ttymxc1 || return $?
   
   echo Resizing the partition... >/dev/ttymxc1 
   resize2fs ${rootpart}  >/dev/ttymxc1 || return $?
@@ -45,7 +45,7 @@ case "$1" in
     
     echo "Expanding rootfs..." >/dev/ttymxc1
 
-    if do_expand_rootfs >/dev/ttymxc1 ;
+    if do_expand_rootfs ;
     then
       echo "Expanding partition success" >/dev/ttymxc1
     else
