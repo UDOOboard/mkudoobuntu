@@ -45,6 +45,9 @@ BOOTSTART=$(($OFFSET*2048))
 ROOTSTART=$(($BOOTSTART+($BOOTSIZE*2048)))
 BOOTEND=$(($ROOTSTART-1))
 
+LABELBOOT=${LABELBOOT:-boot}
+LABELFS=${LABELFS:-udoobuntu}
+
 echo -e "Creating image partitions" >&1 >&2
 # Create partitions and file-system
 parted -s $LOOP -- mklabel msdos
