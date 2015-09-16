@@ -40,7 +40,7 @@ DESKTOP_PACKAGES=( lubuntu-core leafpad lxterminal galculator lxtask lxappearanc
   chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra chromium-egl 
   gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad 
   gstreamer0.10-plugins-good gstreamer0.10-pulseaudio xinput-calibrator
-  xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev xvfb )
+  xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev tightvncserver )
 
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
   libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager )
