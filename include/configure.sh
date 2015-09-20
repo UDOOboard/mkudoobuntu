@@ -107,6 +107,7 @@ sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
+echo "default username:password is [$USERNAMEPWD:$USERNAMEPWD]" >> "$ROOTFS/etc/issue"
 
 echo -e "Configuring network"
 install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
