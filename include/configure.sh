@@ -52,6 +52,8 @@ mkdir "$ROOTFS/selinux"
 rm "$ROOTFS/etc/init/ureadahead*"
 rm "$ROOTFS/etc/init/plymouth*"
 
+
+
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Configuring desktop" >&2 >&1
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
@@ -59,11 +61,18 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo manual > "$ROOTFS/etc/init/lightdm.override"
 	mkdir "$ROOTFS/etc/lightdm/lightdm.conf.d"
 	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
-  install -m 644 patches/vncserver.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/12-vncserver.conf"
+	install -m 644 patches/vncserver.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/12-vncserver.conf"
 	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
 	install -m 644 patches/autologin.accountservice "$ROOTFS/var/lib/AccountsService/users/$USERNAMEPWD"
-	sed -e "s/\/usr\/share\/lubuntu\/wallpapers\/lubuntu-default-wallpaper\.png/\/usr\/share\/udoo\/wallpapers\/UDOO-blue.png/" \
-		-i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
+
+	#wallpaper
+	WALLPAPER_OLD="$ROOTFS/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
+	WALLPAPER_NEW="$ROOTFS/usr/share/udoo/wallpapers"
+
+	[[ -f $WALLPAPER_NEW/$WALLPAPER.png ]] || unset $WALLPAPER
+	WALLPAPER_NEW+=/${WALLPAPER:-UDOO-blue}.png
+
+	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 fi
 
 echo "UTC" > "$ROOTFS/etc/timezone"
