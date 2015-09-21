@@ -52,7 +52,12 @@ mkdir "$ROOTFS/selinux"
 rm "$ROOTFS/etc/init/ureadahead*"
 rm "$ROOTFS/etc/init/plymouth*"
 
-
+#enable otg gadget
+if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
+	sed -e "s/DHCPD_ENABLED/#\0/" -i /etc/default/udhcpd
+fi
+install -m 744 patches/g_multi.sh /usr/sbin/g_multi.sh
+install -m 744 patches/g_multi.conf /etc/init/g_multi.conf
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Configuring desktop" >&2 >&1
