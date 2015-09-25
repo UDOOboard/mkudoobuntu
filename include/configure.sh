@@ -24,6 +24,8 @@
 
 checkroot
 
+mountroot
+
 echo -e "Configuring system" >&2 >&1
 # kernel packaging configuration
 cp patches/kernel-img.conf "$ROOTFS/etc/"

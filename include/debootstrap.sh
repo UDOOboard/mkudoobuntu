@@ -23,17 +23,7 @@
 ################################################################################
 
 checkroot
-
-if [ -d "$ROOTFS" ]
-then
-  umountroot
-  echo -n "Deleting old root filesystem, are you sure? (y/N) " >&2 >&1
-  read CHOICE
-  
-  [[ $CHOICE = [Yy] ]] || error
-  
-  rm -rf "$ROOTFS"
-fi
+umountroot
 
 export LC_ALL=C LANGUAGE=C LANG=C
 
@@ -94,3 +84,8 @@ chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get autoclean -y'
 
 rm "$ROOTFS/etc/apt/apt.conf.d/01proxy"
 rm -rf "$ROOTFS/fake"
+
+umountroot
+
+echo -e "Saving everything in a tar..."  >&1 >&2
+tar -cvzpf "${ROOTFS}_deboot_$(date +%Y%m%d%H%M).tar.gz" "$ROOTFS"

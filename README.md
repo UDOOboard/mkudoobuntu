@@ -13,7 +13,8 @@ card size at the first boot.
     remove        Remove a deb from rootfs
     list          List installed pkg in rootfs
     reimage       Make a new image from a modified rootfs
-    chrootshell   Open an interactive shell in a rootfs
+    configure     Reconfigure the rootfs
+    shell         Open an interactive shell in a rootfs
 
 ### Prerequisites
 This script has been tested only on Ubuntu 15.04 and 14.04. 

@@ -55,7 +55,8 @@ usage() {
     remove        Remove a deb from rootfs
     list          List installed pkg in rootfs
     reimage       Make a new image from a modified rootfs
-    chrootshell   Open an interactive shell in a rootfs
+    configure     Reconfigure the rootfs
+    shell         Open an interactive shell in a rootfs
  " 
 }
   
@@ -184,6 +185,42 @@ checkroot(){
   fi
 }
 
+destrapfull(){
+  #check if rootfs exist
+  if [ -d "$ROOTFS" ]; then
+    umountroot
+    
+    #delete old fs
+    echo -n "Deleting old root filesystem, are you sure? (y/N) " >&2 >&1
+    read CHOICE
+    
+    if [[ $CHOICE = [Yy] ]] ; then
+      echo -n "Deleting... "
+      rm -rf "$ROOTFS" || error
+      echo -e "Done!"
+    fi
+  fi
+  #resume old debootstrap
+  OLDDEB=( ${ROOTFS}_deboot*.tar.gz )
+  OLDLEN=${#OLDDEB[*]}
+  OLDLAS=${OLDDEB[$OLDLEN-1]}
+ 
+  if [ -f "$OLDLAS" ]; then
+    echo -n "Found old debootstrap tar ($OLDLAS), do you want to use it?  (Y/n) " >&2 >&1
+    read CHOICE
+    
+    if [[ $CHOICE != [Nn] ]] ; then
+      echo -n "Extracting... "
+      tar -xzpf "$OLDLAS" || error
+      echo -e "Done!"
+    fi
+  fi
+    
+  source include/debootstrap.sh
+  source include/configure.sh
+  source include/imager.sh
+}
+
 ## START
 
 checkPackage $HOST_PACKAGES
@@ -203,9 +240,9 @@ checkPackage $HOST_PACKAGES
     #compile
     source $RECIPE
     checkroot
-    source include/debootstrap.sh
-    source include/configure.sh
-    source include/imager.sh
+    
+    destrapfull
+    
     ok
   done
 }
@@ -233,15 +270,25 @@ checkPackage $HOST_PACKAGES
         #remove packages
         removedeb $@ && ok
     ;;
-    list)
+    list) shift
         #list packages
         listdeb && ok
+    ;;
+    debootstrap)
+        #configure
+        source include/debootstrap.sh
+        ok
+    ;;
+    configure)
+        #configure
+        source include/configure.sh
+        ok
     ;;
     reimage) 
         source include/imager.sh
         ok
     ;;
-    chrootshell)
+    shell)
         chrootshell && ok
     ;;
     *)  
@@ -249,9 +296,9 @@ checkPackage $HOST_PACKAGES
         (( $# )) && usage && error "Option \"$1\" not recognized" 
         
         checkroot
-        source include/debootstrap.sh
-        source include/configure.sh
-        source include/imager.sh
+        
+        destrapfull
+
         ok
     ;;
     esac
