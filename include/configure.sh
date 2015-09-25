@@ -27,32 +27,30 @@ checkroot
 mountroot
 
 echo -e "Configuring system" >&2 >&1
-# kernel packaging configuration
-cp patches/kernel-img.conf "$ROOTFS/etc/"
 
 # st1232 touchscreen conf
-mkdir "$ROOTFS/etc/X11/xorg.conf.d/"
-cp patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
-cp patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+mkdir -p "$ROOTFS/etc/X11/xorg.conf.d/"
+cp -f patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+cp -f patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 
 # configure console
-cp patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
-cp patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
-rm "$ROOTFS/etc/init/tty3.conf"
-rm "$ROOTFS/etc/init/tty4.conf"
-rm "$ROOTFS/etc/init/tty5.conf"
-rm "$ROOTFS/etc/init/tty6.conf"
+cp -f patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
+cp -f patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
+rm -f "$ROOTFS/etc/init/tty3.conf"
+rm -f "$ROOTFS/etc/init/tty4.conf"
+rm -f "$ROOTFS/etc/init/tty5.conf"
+rm -f "$ROOTFS/etc/init/tty6.conf"
 
 # enable root login
 sed -i 's/PermitRootLogin without-password/PermitRootLogin no/' "$ROOTFS/etc/ssh/sshd_config"
 echo manual > "$ROOTFS/etc/init/ssh.override"
 
 # fix selinux
-mkdir "$ROOTFS/selinux"
+mkdir -p "$ROOTFS/selinux"
 
 # remove what's anyway not working
-rm "$ROOTFS/etc/init/ureadahead*"
-rm "$ROOTFS/etc/init/plymouth*"
+rm -f "$ROOTFS/etc/init/ureadahead*"
+rm -f "$ROOTFS/etc/init/plymouth*"
 
 #enable otg gadget
 if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
@@ -124,10 +122,14 @@ install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
 install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
-if [ -n "$ENV" ]
+if [ -n "$UENV" ]
 	then
 	echo -e "Creating uEnv"
 	cat << EOF > "$ROOTFS/boot/uEnv.txt"
 $UENV
 EOF
 fi
+
+
+
+umountroot

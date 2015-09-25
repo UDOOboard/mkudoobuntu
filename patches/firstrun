@@ -22,37 +22,45 @@ do_expand_rootfs(){
   rootpart=$(df / --output=source | tail -n1)
   PARTITIONS=$(($(fdisk -l $device | grep $device | wc -l)-1))
   
-  echo Editing the partition table... >/dev/ttymxc1
+  echo Editing the partition table... 
   ( (echo d; echo $PARTITIONS; echo n; echo p; echo ; echo ; echo ; echo w; ) | 
     fdisk $device )>/dev/null
   sync
   
-  echo Probing the partition table... >/dev/ttymxc1
-  partx -u ${rootpart} >/dev/ttymxc1 || return $?
+  echo Probing the partition table... 
   
-  echo Resizing the partition... >/dev/ttymxc1 
-  resize2fs ${rootpart}  >/dev/ttymxc1 || return $?
+#   if [[ -x `which partprobe` ]]
+#   then
+#     alias partread="partprobe"
+#   else
+#     alias partread="partx -u"
+#   fi
+  
+  partx -u ${rootpart} || return $?
+  
+  echo Resizing the partition... 
+  resize2fs ${rootpart} || return $?
 }
 
 case "$1" in
   start)
     reboot=false
 
-    echo -e "SSH keys recreation. One moment please" >/dev/ttymxc1
+    echo -e "SSH keys recreation. One moment please" 
     rm -f /etc/ssh/ssh_host*
-    dpkg-reconfigure openssh-server >/dev/ttymxc1
+    dpkg-reconfigure openssh-server
     set +e
     
-    echo "Expanding rootfs..." >/dev/ttymxc1
+    echo "Expanding rootfs..." 
 
     if do_expand_rootfs ;
     then
-      echo "Expanding partition success" >/dev/ttymxc1
+      echo "Expanding partition success" 
     else
-      echo "Expanding rootfs has failed, see log files. Error code: $?" >/dev/ttymxc1
+      echo "Expanding rootfs has failed, see log files. Error code: $?" 
     fi
 
-    update-rc.d -f firstrun remove >/dev/null 2>&1 >/dev/ttymxc1
+    update-rc.d -f firstrun remove >/dev/null 2>&1 
     
     rm /etc/init/ssh.override
     service ssh start

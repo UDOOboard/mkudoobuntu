@@ -29,8 +29,9 @@ umountroot
 umount -lf sdcard/boot
 umount -lf sdcard
 
+#guessing sd image size..
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
-SDSIZE="$(( $ROOTSIZE / 1000 + $ROOTSIZE / 10000 ))"
+SDSIZE="$(( $ROOTSIZE / 1000 + $ROOTSIZE / 7000 ))"
 
 echo -e "Creating a $SDSIZE MB image..."
 OUTPUT+="_$(date +%Y%m%d%H%M).img"

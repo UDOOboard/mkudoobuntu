@@ -112,7 +112,8 @@ mountroot(){
 
   for i in proc sys dev dev/pts
   do 
-    [  -d "$ROOTFS/$i" ] || error "Rootfs not present/not populated ($ROOTFS/$i) "
+    [  -d "$ROOTFS/$i" ] || error "Rootfs not present/not populated ($ROOTFS/$i)"
+    mountpoint -q "$ROOTFS/$i" && umount -lf "$ROOTFS/$i"
   done
   checkroot
   mount -t proc chproc "$ROOTFS/proc"
@@ -172,6 +173,7 @@ removedeb(){
 
 listdeb(){
   mountroot
+  (( $# == 0 )) && chroot $ROOTFS/ /bin/bash -c "dpkg -l"
   for i in $@
   do
       chroot $ROOTFS/ /bin/bash -c "dpkg -l $i"
