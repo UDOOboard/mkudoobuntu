@@ -88,7 +88,7 @@ if [ -f /usr/sbin/udhcpd ] ; then
 		echo "end        ${udhcp_end}" >> /etc/udhcpd.conf
 		echo "interface  ${udhcp_interface}" >> /etc/udhcpd.conf
 		echo "max_leases ${udhcp_max_leases}" >> /etc/udhcpd.conf
-		echo "option ${udhcp_option}" >> /etc/udhcpd.conf
+		echo "option     ${udhcp_option}" >> /etc/udhcpd.conf
 	fi
 	/usr/sbin/udhcpd -S /etc/udhcpd.conf
 	

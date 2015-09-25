@@ -56,10 +56,10 @@ rm "$ROOTFS/etc/init/plymouth*"
 
 #enable otg gadget
 if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
-	sed -e "s/DHCPD_ENABLED/#\0/" -i /etc/default/udhcpd
+	sed -e "s/DHCPD_ENABLED/#\0/" -i "$ROOTFS/etc/default/udhcpd"
 fi
-install -m 744 patches/g_multi.sh /usr/sbin/g_multi.sh
-install -m 744 patches/g_multi.conf /etc/init/g_multi.conf
+install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
+install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Configuring desktop" >&2 >&1
@@ -114,7 +114,10 @@ sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
-echo "default username:password is [$USERNAMEPWD:$USERNAMEPWD]" >> "$ROOTFS/etc/issue"
+cat "$ROOTFS/etc/issue" << ISSUE
+
+default username:password is [$USERNAMEPWD:$USERNAMEPWD]
+ISSUE
 
 echo -e "Configuring network"
 install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
