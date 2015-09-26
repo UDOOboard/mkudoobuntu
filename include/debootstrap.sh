@@ -28,12 +28,9 @@ umountroot
 export LC_ALL=C LANGUAGE=C LANG=C
 
 echo -e "Debootstrapping" >&1 >&2
-#converting array to string comma-separated
-DEBOOTPACKAGES=`echo ${DEBOOT_PACKAGES[*]} | sed -e 's/ /,/g'`
 
 debootstrap  --foreign \
              --arch=armhf \
-             --include="$DEBOOTPACKAGES" \
              trusty "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
 
 (( $? )) && error "Debootstrap exited with error $?"

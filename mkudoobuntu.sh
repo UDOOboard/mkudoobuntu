@@ -26,22 +26,35 @@ RECIPES=recipes
 
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
-DEBOOT_PACKAGES=( openssh-server debconf-utils alsa-utils bash-completion 
-  bluez curl dosfstools fbset iw nano module-init-tools ntp screen unzip usbutils 
-  vlan wireless-tools wget wpasupplicant unicode-data )
-
-BASE_PACKAGES=( console-data console-common pv git sysfsutils cpufrequtils i2c-tools 
-  hostapd ntfs-3g locate firmware-ralink imx-vpu-cnm-9t udev-udoo-rules command-not-found 
-  kernel-package man-db bash-completion )
+BASE_PACKAGES=( openssh-server alsa-utils bash-completion 
+  bluez curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
+  vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
+  pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
+  debconf-utils )
   
-DESKTOP_PACKAGES=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
-  lxrandr lxshortcut lxinput evince transmission-gtk abiword file-roller lubuntu-software-center 
-  scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev imx-gpu-viv-9t6-acc-x11 
-  chromium-browser chromium-browser-l10n chromium-chromedriver chromium-codecs-ffmpeg-extra chromium-egl 
-  gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base gstreamer0.10-plugins-bad 
-  gstreamer0.10-plugins-good gstreamer0.10-pulseaudio xinput-calibrator
-  xserver-xorg-core xserver-common libdrm-dev xserver-xorg-dev tightvncserver )
+#udoo related
+BASE_PACKAGES+=( imx-vpu-cnm-9t udev-udoo-rules hostapd )
+  
+DESKTOP_PACKAGES=(  evince transmission-gtk abiword file-roller 
+  scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev  
+  xinput-calibrator tightvncserver npm nodejs-legacy nodejs )
+ 
+#lubuntu
+DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
+  lxrandr lxshortcut lxinput lubuntu-software-center )
 
+#xorg
+DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
+  xserver-xorg-dev libdrm-dev )
+  
+#gstreamer
+DESKTOP_PACKAGES+=( gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base 
+  gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio) 
+
+#chromium
+DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
+  chromium-codecs-ffmpeg-extra chromium-egl )
+  
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
   libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager )
 
