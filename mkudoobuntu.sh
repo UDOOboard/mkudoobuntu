@@ -59,11 +59,12 @@ UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane
   libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager )
 
 usage() {
- echo "./mkudoobuntu.sh [RECIPE [operation]]
+ echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]
 
     <none>        Select a recipe interactively
     RECIPE        Start debootstrapping a recipe
 
+    --force       Don't ask 
     install       Install a deb in rootfs from repos
     remove        Remove a deb from rootfs
     list          List installed pkg in rootfs
@@ -202,25 +203,45 @@ checkroot(){
 
 destrapfull(){
   #check if rootfs exist
+  local -i FORCE=0
+  while (( $# ))
+  do 
+      case $1 in
+          --force) shift; FORCE=1 ;;
+          *) usagee "Option \"$1\" not recognized"  ;;
+      esac
+      shift
+  done
+    
   if [ -d "$ROOTFS" ]; then
     umountroot
     
-    #delete old fs
-    echo -n "Deleting old root filesystem, are you sure? (y/N) " >&2 >&1
-    read CHOICE
+  checkPackage $HOST_PACKAGES
+  
+    local -i FORCE=$1
     
-    if [[ $CHOICE = [Yy] ]] ; then
-      echo -n "Deleting... "
-      rm -rf "$ROOTFS" || error
-      echo -e "Done!"
+    #delete old fs
+    if (( $FORCE ))
+       then rm -rf "$ROOTFS" || error
+    else
+        echo -n "Deleting old root filesystem, are you sure? (y/N) " >&2 >&1
+        read CHOICE
+    
+        if [[ $CHOICE = [Yy] ]] ; then
+            echo -n "Deleting... "
+            rm -rf "$ROOTFS" || error
+            echo -e "Done!"
+        else
+            error
+        fi
     fi
   fi
   #resume old debootstrap
   OLDDEB=( ${ROOTFS}_deboot*.tar.gz )
   OLDLEN=${#OLDDEB[*]}
-  OLDLAS=${OLDDEB[$OLDLEN-1]}
+  OLDLAS=${OLDDEB[$OLDLEN-1]}  ## last backup
  
-  if [ -f "$OLDLAS" ]; then
+  if [ -f "$OLDLAS" ] && (( ! $FORCE )) ; then
     echo -n "Found old debootstrap tar ($OLDLAS), do you want to use it?  (Y/n) " >&2 >&1
     read CHOICE
     
@@ -228,17 +249,19 @@ destrapfull(){
       echo -n "Extracting... "
       tar -xzpf "$OLDLAS" || error
       echo -e "Done!"
+    else
+        source include/debootstrap.sh
     fi
+  else
+     source include/debootstrap.sh
   fi
     
-  source include/debootstrap.sh
   source include/configure.sh
   source include/imager.sh
 }
 
 ## START
 
-checkPackage $HOST_PACKAGES
 
 #no args
 (( $# )) || {
@@ -257,7 +280,6 @@ checkPackage $HOST_PACKAGES
     checkroot
     
     destrapfull
-    
     ok
   done
 }
@@ -291,6 +313,7 @@ checkPackage $HOST_PACKAGES
     ;;
     debootstrap)
         #configure
+        checkPackage $HOST_PACKAGES
         source include/debootstrap.sh
         ok
     ;;
@@ -308,11 +331,10 @@ checkPackage $HOST_PACKAGES
     ;;
     *)  
         #install from scratch
-        (( $# )) && usage && error "Option \"$1\" not recognized" 
         
         checkroot
         
-        destrapfull
+        destrapfull $@
 
         ok
     ;;

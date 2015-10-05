@@ -84,5 +84,6 @@ rm -rf "$ROOTFS/fake"
 
 umountroot
 
-echo -e "Saving everything in a tar..."  >&1 >&2
-tar -cvzpf "${ROOTFS}_deboot_$(date +%Y%m%d%H%M).tar.gz" "$ROOTFS"
+echo -n "Saving everything in a tar..."  >&1 >&2
+tar -czpf "${ROOTFS}_deboot_$(date +%Y%m%d%H%M).tar.gz" "$ROOTFS"
+echo "Done!" >&1 >&2
