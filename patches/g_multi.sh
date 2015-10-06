@@ -96,3 +96,9 @@ if [ -f /usr/sbin/udhcpd ] ; then
 	sleep 1
 	/etc/init.d/udhcpd restart
 fi
+
+while [ 1 ]
+do
+    sleep 1000
+done
+        

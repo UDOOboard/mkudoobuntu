@@ -36,6 +36,7 @@ cp -f patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 # configure console
 cp -f patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
 cp -f patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
+cp -f patches/ttymxc1.conf "$ROOTFS/etc/init/ttyGS0.conf"
 rm -f "$ROOTFS/etc/init/tty3.conf"
 rm -f "$ROOTFS/etc/init/tty4.conf"
 rm -f "$ROOTFS/etc/init/tty5.conf"
