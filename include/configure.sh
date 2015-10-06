@@ -28,10 +28,13 @@ mountroot
 
 echo -e "Configuring system" >&2 >&1
 
-# st1232 touchscreen conf
+# touchscreen conf
 mkdir -p "$ROOTFS/etc/X11/xorg.conf.d/"
 cp -f patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 cp -f patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+
+# disable xapt
+cp -f patches/xapt-periodic.conf "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic.conf"
 
 # configure console
 cp -f patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
