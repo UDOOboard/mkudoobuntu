@@ -75,11 +75,17 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	install -m 644 patches/autologin.accountservice "$ROOTFS/var/lib/AccountsService/users/$USERNAMEPWD"
 
 	#wallpaper
-	WALLPAPER_OLD="$ROOTFS/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
-	WALLPAPER_NEW="$ROOTFS/usr/share/udoo/wallpapers"
+	WALLPAPER_OLD="/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
+	WALLPAPER_NEW="/usr/share/udoo/wallpapers"
 
-	[[ -f $WALLPAPER_NEW/$WALLPAPER.png ]] || unset $WALLPAPER
-	WALLPAPER_NEW+=/${WALLPAPER:-UDOO-blue}.png
+    #check valid wallpaper
+	if [[ -n $WALLPAPER ]] && [[ ! -f "$ROOTFS/$WALLPAPER_NEW/$WALLPAPER.png" ]] 
+    then
+        echo -e "Cannot found wallpaper $WALLPAPER"
+        unset WALLPAPER
+    fi
+    
+	WALLPAPER_NEW+=/${WALLPAPER:-$WALLPAPER_DEF}.png
 
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 fi

@@ -24,6 +24,16 @@
 
 RECIPES=recipes
 
+# Default wallpaper for lxde
+#
+# Available in udoo-artwork
+# UDOO-blue
+# UDOO-gray
+# UDOO-green
+# UDOO-pink
+
+WALLPAPER_DEF=UDOO-blue
+
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
 BASE_PACKAGES=( openssh-server alsa-utils bash-completion 
