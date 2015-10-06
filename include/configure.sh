@@ -122,7 +122,7 @@ sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
-cat "$ROOTFS/etc/issue" << ISSUE
+cat << ISSUE >> "$ROOTFS/etc/issue" 
 
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE
@@ -139,7 +139,5 @@ if [ -n "$UENV" ]
 $UENV
 EOF
 fi
-
-
 
 umountroot

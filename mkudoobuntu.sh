@@ -252,7 +252,7 @@ destrapfull(){
   OLDLAS=${OLDDEB[$OLDLEN-1]}  ## last backup
  
   if [ -f "$OLDLAS" ] && (( ! $FORCE )) ; then
-    echo -n "Found old debootstrap tar ($OLDLAS), do you want to use it?  (Y/n) " >&2 >&1
+    echo -n "Found old debootstrap tar ($OLDLAS), use it?  (Y/n) " >&2 >&1
     read CHOICE
     
     if [[ $CHOICE != [Nn] ]] ; then
