@@ -37,7 +37,7 @@ WALLPAPER_DEF=UDOO-blue
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
 BASE_PACKAGES=( openssh-server alsa-utils bash-completion 
-  bluez curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
+  bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
   vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
   debconf-utils )
