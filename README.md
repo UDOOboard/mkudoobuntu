@@ -25,3 +25,13 @@ It may work on other Debian-like system.
 1. UDOO Quad 
 2. UDOO Dual
 3. UDOO Neo
+
+### Misc sources
+Original work:
+https://github.com/igorpecovnik/lib 
+
+U-boot:
+https://github.com/UDOOboard/uboot-imx
+
+Kernel:
+https://github.com/UDOOboard/linux_kernel/
