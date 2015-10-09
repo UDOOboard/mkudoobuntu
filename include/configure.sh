@@ -88,6 +88,12 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	WALLPAPER_NEW+=/${WALLPAPER:-$WALLPAPER_DEF}.png
 
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
+
+  #on screen keyboard 
+  install -m 644 -o 1000 \
+    "$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
+    "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+
 fi
 
 echo "UTC" > "$ROOTFS/etc/timezone"

@@ -40,14 +40,14 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion
   bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
   vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
-  debconf-utils )
+  debconf-utils python-pip vim )
   
 #udoo related
 BASE_PACKAGES+=( imx-vpu-cnm-9t udev-udoo-rules hostapd )
   
 DESKTOP_PACKAGES=(  evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev  
-  xinput-calibrator tightvncserver npm nodejs-legacy nodejs )
+  xinput-calibrator tightvncserver npm nodejs-legacy nodejs matchbox-keyboard )
  
 #lubuntu
 DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
