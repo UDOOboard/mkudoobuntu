@@ -110,7 +110,7 @@ usagee(){
 
 checkPackage(){
   declare -a PACKAGES
-  for i in $@
+  for i in ${HOST_PACKAGES[*]}
     do
       dpkg -l "$i" > /dev/null
       if [[ $? != 0 ]]
@@ -120,7 +120,7 @@ checkPackage(){
       fi
   done
   
-  if [[ $PACKAGES != "" ]] 
+  if (( ${#PACKAGES[*]} ))
   then
     checkroot
     apt-get install ${PACKAGES[*]}
