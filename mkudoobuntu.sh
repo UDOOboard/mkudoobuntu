@@ -43,7 +43,7 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion
   debconf-utils python-pip vim )
 
 #udoo related
-BASE_PACKAGES+=( imx-vpu-cnm-9t udev-udoo-rules hostapd )
+BASE_PACKAGES+=( imx-vpu-cnm-9t hostapd )
 
 DESKTOP_PACKAGES=( arduino arduino-core evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev  
