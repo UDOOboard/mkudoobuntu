@@ -27,6 +27,10 @@ umountroot
 
 export LC_ALL=C LANGUAGE=C LANG=C
 
+chroot_cmd(){
+chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive $@"
+}
+
 echo -e "Debootstrapping" >&1 >&2
 
 debootstrap  --foreign \
@@ -44,7 +48,8 @@ echo -e "Disabling services" >&1 >&2
 mkdir "$ROOTFS/fake"
 for i in initctl invoke-rc.d restart start stop start-stop-daemon service
 do
-  ln -s /bin/true "$ROOTFS/fake/$i" || error "Cannot make link to /bin/true, stopping.."
+  ln -s /bin/true "$ROOTFS/fake/$i" ||
+    error "Cannot make link to /bin/true, stopping.."
 done
 
 cp patches/gpg.key "$ROOTFS/tmp/"
@@ -65,19 +70,24 @@ chroot "$ROOTFS/" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive"
 chroot "$ROOTFS/" /bin/bash -c "update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_MESSAGES=POSIX"
 
 echo -e "Install packages" >&1 >&2
-chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${BASE_PACKAGES[*]}"
+chroot_cmd apt-get install -y ${BASE_PACKAGES[*]} ||
+  error "Cannot install BASE packages"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
   echo -e "Install desktop environment" >&1 >&2
-  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${DESKTOP_PACKAGES[*]}"
+  chroot_cmd apt-get install -y ${DESKTOP_PACKAGES[*]} ||
+    error "Cannot install DESKTOP packages"
 fi
 
 echo -e "Cleanup" >&1 >&2
 touch "$ROOTFS/etc/init.d/modemmanager"
-chroot "$ROOTFS/" /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq ${UNWANTED_PACKAGES[*]}"
-chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get autoremove -y'
-chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get clean -y'
-chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get autoclean -y'
+
+chroot_cmd apt-get purge -y -qq ${UNWANTED_PACKAGES[*]} ||
+  error "Cannot purge UNWANTED packages"
+
+chroot_cmd apt-get autoremove -y || error "Cannot autoremove"
+chroot_cmd apt-get clean -y || error "Cannot clean"
+chroot_cmd apt-get autoclean -y || error "Cannot autoclean"
 
 rm "$ROOTFS/etc/apt/apt.conf.d/01proxy"
 rm -rf "$ROOTFS/fake"
