@@ -97,6 +97,8 @@ if [ -f /usr/sbin/udhcpd ] ; then
 	/etc/init.d/udhcpd restart
 fi
 
+trap "echo" 1 
+
 while [ 1 ]
 do
     sleep 1000
