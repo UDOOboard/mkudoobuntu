@@ -125,6 +125,8 @@ sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"$CPUMAX\"/g" -i "$ROOTFS/etc/init.d/cpufre
 sed -e 's/# "\\e\[5~": history\-search\-backward/"\\e[5~": history-search-backward/' -i "$ROOTFS/etc/inputrc"
 sed -e 's/# "\\e\[6~": history\-search\-forward/"\\e[6~": history-search-forward/' -i "$ROOTFS/etc/inputrc"
 sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
+echo "alias grep='grep --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
+echo "alias ls='ls --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
