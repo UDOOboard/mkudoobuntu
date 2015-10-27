@@ -94,6 +94,10 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
     "$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
     "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 
+	#desktop icons
+	mkdir "$ROOTFS/home/$USERNAMEPWD/Desktop"
+	cp "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	cp "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 fi
 
 echo "UTC" > "$ROOTFS/etc/timezone"
