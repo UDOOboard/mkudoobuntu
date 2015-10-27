@@ -152,6 +152,4 @@ $UENV
 EOF
 fi
 
-[[ $ROOTFS =~ "neo" ]] && cp -f binary/m4startup.fw "$ROOTFS/boot/"
-    
 umountroot
