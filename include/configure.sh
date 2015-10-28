@@ -63,6 +63,23 @@ fi
 install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
 install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 
+echo "UTC" > "$ROOTFS/etc/timezone"
+chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >/dev/null"
+
+# setup users
+chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
+if [ "$BUILD_DESKTOP" = "yes" ]; then
+  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
+	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
+else
+	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
+fi
+chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
+chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
+
+# configure fstab
+install -m 644 patches/fstab "$ROOTFS/etc/fstab"
+
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "Configuring desktop" >&2 >&1
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
@@ -104,23 +121,6 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 		install -m 644 patches/neo-audio/asound.state "$ROOTFS/var/lib/alsa/asound.state"
 	fi
 fi
-
-echo "UTC" > "$ROOTFS/etc/timezone"
-chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >/dev/null"
-
-# setup users
-chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
-if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
-	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
-else
-	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
-fi
-chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
-chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
-
-# configure fstab
-install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 
 # first boot services
 install -m 755 patches/firstrun  "$ROOTFS/etc/init.d"
