@@ -1,0 +1,19 @@
+state.imxaudiotda1998 {
+	control.1 {
+		iface MIXER
+		name Master
+		value.0 255
+		value.1 255
+		comment {
+			access 'read write user'
+			type INTEGER
+			count 2
+			range '0 - 255'
+			tlv '00000001000000080000000000000014'
+			dbmin 0
+			dbmax 5100
+			dbvalue.0 5100
+			dbvalue.1 5100
+		}
+	}
+}

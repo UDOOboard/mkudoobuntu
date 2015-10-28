@@ -98,6 +98,11 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	mkdir "$ROOTFS/home/$USERNAMEPWD/Desktop"
 	cp "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	cp "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	
+	if [ "$HOSTNAME" = "udooneo" ]; then
+		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
+		install -m 644 patches/neo-audio/asound.state "$ROOTFS/var/lib/alsa/asound.state"
+	fi
 fi
 
 echo "UTC" > "$ROOTFS/etc/timezone"
