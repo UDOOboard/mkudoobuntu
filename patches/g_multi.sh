@@ -81,8 +81,6 @@ if [ -f /usr/sbin/udhcpd ] ; then
 	sleep 1
 
 	# Will start or restart udhcpd
-	/sbin/ifconfig usb0 ${usb0_address} netmask ${usb0_netmask} || true
-
 	if [ -f /etc/udhcpd.conf ] ; then
 		echo "start      ${udhcp_start}" > /etc/udhcpd.conf
 		echo "end        ${udhcp_end}" >> /etc/udhcpd.conf
@@ -103,4 +101,4 @@ while [ 1 ]
 do
     sleep 1000
 done
-        
+
