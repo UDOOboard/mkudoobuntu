@@ -67,7 +67,7 @@ DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver
 
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
   libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils valgrind 
-  gnome-user-guide freepats )
+  gnome-user-guide freepats cups cups-browsed )
 
 usage() {
  echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]
