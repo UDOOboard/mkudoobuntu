@@ -53,8 +53,8 @@ echo manual > "$ROOTFS/etc/init/ssh.override"
 mkdir -p "$ROOTFS/selinux"
 
 # remove what's anyway not working
-rm -f "$ROOTFS/etc/init/ureadahead*"
-rm -f "$ROOTFS/etc/init/plymouth*"
+#rm -f "$ROOTFS/etc/init/ureadahead*"
+#rm -f "$ROOTFS/etc/init/plymouth*"
 
 #enable otg gadget
 if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
@@ -69,7 +69,7 @@ chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >
 # setup users
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
+#  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"

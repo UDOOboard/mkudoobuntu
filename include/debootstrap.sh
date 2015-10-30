@@ -81,7 +81,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 fi
 
 echo -e "Cleanup" >&1 >&2
-touch "$ROOTFS/etc/init.d/modemmanager"
+#touch "$ROOTFS/etc/init.d/modemmanager"
 chroot "$ROOTFS/" /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq ${UNWANTED_PACKAGES[*]}"
 chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get autoremove -y'
 chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get clean -y'
