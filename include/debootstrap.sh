@@ -26,17 +26,20 @@ checkroot
 umountroot
 
 export LC_ALL=C LANGUAGE=C LANG=C
+UBUNTURELEASE="vivid"
 
 echo -e "Debootstrapping" >&1 >&2
 
 debootstrap  --foreign \
              --arch=armhf \
-             trusty "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
+             --include=ubuntu-keyring \
+             $UBUNTURELEASE "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
 
 (( $? )) && error "Debootstrap exited with error $?"
              
 echo -e "Using emulator to finish install" >&1 >&2
 cp /usr/bin/qemu-arm-static "$ROOTFS/usr/bin"
+chroot "$ROOTFS/" /bin/bash -c "dpkg -i /var/cache/apt/archives/ubuntu-keyring*.deb"
 chroot "$ROOTFS/" /bin/bash -c "/debootstrap/debootstrap --second-stage"
 
 mountroot
@@ -54,9 +57,14 @@ install -m 644 patches/01proxy          "$ROOTFS/etc/apt/apt.conf.d/01proxy"
 install -m 644 patches/sources.list     "$ROOTFS/etc/apt/sources.list"
 install -m 644 patches/udoo.list        "$ROOTFS/etc/apt/sources.list.d/udoo.list"
 install -m 644 patches/udoo.preferences "$ROOTFS/etc/apt/preferences.d/udoo"
+sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list"
 
 chroot "$ROOTFS/" /bin/bash -c "apt-key add /tmp/gpg.key"
+chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5"
+chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32"
+
 chroot "$ROOTFS/" /bin/bash -c "apt-get -y update"
+chroot "$ROOTFS/" /bin/bash -c "apt-get -y -f install"
 chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get -y dist-upgrade'
 chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get -y -qq install locales'
 chroot "$ROOTFS/" /bin/bash -c "locale-gen en_US.UTF-8 it_IT.UTF-8 en_GB.UTF-8"
