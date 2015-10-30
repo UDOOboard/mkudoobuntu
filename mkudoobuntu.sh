@@ -84,7 +84,12 @@ usage() {
     shell         Open an interactive shell in a rootfs
  " 
 }
-  
+
+GREEN="\e[32m"
+BOLD="\e[1m"
+RST="\e[0m"
+GREENBOLD=${GREEN}${BOLD}
+
 error() {
   #error($E_TEXT,$E_CODE)
 
@@ -241,7 +246,7 @@ destrapfull(){
         if [[ $CHOICE = [Yy] ]] ; then
             echo -n "Deleting... "
             rm -rf "$ROOTFS" || error
-            echo -e "Done!"
+            echo -e "${GREENBOLD}Done!${RST}"
         else
             error
         fi
@@ -259,7 +264,7 @@ destrapfull(){
     if [[ $CHOICE != [Nn] ]] ; then
       echo -n "Extracting... "
       tar -xzpf "$OLDLAS" || error
-      echo -e "Done!"
+      echo -e "${GREENBOLD}Done!${RST}"
     else
         source include/debootstrap.sh
     fi

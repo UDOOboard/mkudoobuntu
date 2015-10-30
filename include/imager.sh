@@ -33,7 +33,7 @@ umount -lf sdcard
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
 SDSIZE="$(( $ROOTSIZE / 1000 + $ROOTSIZE / 7000 ))"
 
-echo -e "Creating a $SDSIZE MB image..."
+echo -e "${GREENBOLD}Creating a $SDSIZE MB image...${RST}" >&1 >&2
 OUTPUT+="_$(date +%Y%m%d%H%M).img"
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
 
@@ -49,7 +49,7 @@ BOOTEND=$(($ROOTSTART-1))
 LABELBOOT=${LABELBOOT:-boot}
 LABELFS=${LABELFS:-udoobuntu}
 
-echo -e "Creating image partitions" >&1 >&2
+echo -e "${GREENBOLD}Creating image partitions...${RST}" >&1 >&2
 # Create partitions and file-system
 parted -s $LOOP -- mklabel msdos
 parted -s $LOOP -- mkpart primary fat16  $BOOTSTART"s" $BOOTEND"s"
@@ -70,14 +70,14 @@ mount "${LOOP}p1" sdcard/boot
 
 rm -rf "$ROOTFS/home/ubuntu" #temp fix, we need to move the files later
 
-echo -e "Copying filesystem on SD image..."
+echo -e "${GREENBOLD}Copying filesystem on SD image...${RST}" >&1 >&2
 rsync -a --exclude run --exclude tmp --exclude qemu-arm-static "$ROOTFS/" sdcard/
 ln -s /run sdcard/var/run
 ln -s /run/network sdcard/etc/network/run
 mkdir sdcard/var/tmp
 chmod o+t,ugo+rw sdcard/var/tmp
 
-echo -e "Writing U-BOOT"
+echo -e "${GREENBOLD}Writing U-BOOT...${RST}" >&1 >&2
 # write bootloader
 dd if="$UBOOT" of="$LOOP" bs=1k seek=1
 sync
@@ -88,4 +88,4 @@ umount -lf sdcard
 losetup -d "$LOOP"
 sync
 
-echo -e "Build complete!"
+echo -e "${GREENBOLD}Build complete!${RST}"
