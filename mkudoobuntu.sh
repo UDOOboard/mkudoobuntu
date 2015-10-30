@@ -64,9 +64,10 @@ DESKTOP_PACKAGES+=( gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-ba
 #chromium
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
   chromium-codecs-ffmpeg-extra chromium-egl )
-  
+
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
-  libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager )
+  libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils valgrind 
+  gnome-user-guide freepats )
 
 usage() {
  echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]
