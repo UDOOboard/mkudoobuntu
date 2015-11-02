@@ -108,15 +108,13 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
-    #on screen keyboard 
-    install -m 644 -o 1000 \
-      "$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
-      "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-
 	#desktop icons
 	mkdir "$ROOTFS/home/$USERNAMEPWD/Desktop"
 	cp "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	cp "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 644 -o 1000 \
+		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
+		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
