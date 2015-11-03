@@ -1,7 +1,7 @@
-deb http://ports.ubuntu.com/ubuntu-ports/ trusty main universe multiverse
-deb http://ports.ubuntu.com/ubuntu-ports/ trusty-updates main universe multiverse
-deb http://ports.ubuntu.com/ubuntu-ports/ trusty-security main universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE main universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE-updates main universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE-security main universe multiverse
 
-#deb-src http://ports.ubuntu.com/ubuntu-ports/ trusty main universe multiverse
-#deb-src http://ports.ubuntu.com/ubuntu-ports/ trusty-updates main universe multiverse
-#deb-src http://ports.ubuntu.com/ubuntu-ports/ trusty-security main universe multiverse
+#deb-src http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE main universe multiverse
+#deb-src http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE-updates main universe multiverse
+#deb-src http://ports.ubuntu.com/ubuntu-ports/ UBUNTURELEASE-security main universe multiverse

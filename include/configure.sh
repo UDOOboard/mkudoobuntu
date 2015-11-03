@@ -26,8 +26,7 @@ checkroot
 
 mountroot
 
-echo -e "Configuring system" >&2 >&1
-
+echo -e "${GREENBOLD}Configuring system...${RST}" >&1 >&2
 # touchscreen conf
 mkdir -p "$ROOTFS/etc/X11/xorg.conf.d/"
 cp -f patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
@@ -37,6 +36,7 @@ cp -f patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 cp -f patches/xapt-periodic.conf "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic.conf"
 
 # configure console
+echo -e "${GREENBOLD}Configuring console...${RST}" >&1 >&2
 cp -f patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
 cp -f patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
 cp -f patches/ttyGS0.conf "$ROOTFS/etc/init/ttyGS0.conf"
@@ -53,8 +53,8 @@ echo manual > "$ROOTFS/etc/init/ssh.override"
 mkdir -p "$ROOTFS/selinux"
 
 # remove what's anyway not working
-rm -f "$ROOTFS/etc/init/ureadahead*"
-rm -f "$ROOTFS/etc/init/plymouth*"
+#rm -f "$ROOTFS/etc/init/ureadahead*"
+#rm -f "$ROOTFS/etc/init/plymouth*"
 
 #enable otg gadget
 if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
@@ -63,13 +63,15 @@ fi
 install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
 install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 
+echo -e "${GREENBOLD}Configuring timezone...${RST}" >&1 >&2
 echo "UTC" > "$ROOTFS/etc/timezone"
 chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >/dev/null"
 
 # setup users
+echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
+#  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
@@ -81,7 +83,7 @@ chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-	echo -e "Configuring desktop" >&2 >&1
+	echo -e "${GREENBOLD}Configuring desktop...${RST}" >&1 >&2
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
 	sed -i 's/and plymouth-ready//' "$ROOTFS/etc/init/lightdm.conf"
 	echo manual > "$ROOTFS/etc/init/lightdm.override"
@@ -106,15 +108,13 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
-  #on screen keyboard 
-  install -m 644 -o 1000 \
-    "$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
-    "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-
 	#desktop icons
 	mkdir "$ROOTFS/home/$USERNAMEPWD/Desktop"
 	cp "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	cp "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 644 -o 1000 \
+		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
+		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
@@ -122,7 +122,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	fi
 fi
 
-# first boot services
+echo -e "${GREENBOLD}Installing first boot service...${RST}" >&1 >&2
 install -m 755 patches/firstrun  "$ROOTFS/etc/init.d"
 chroot "$ROOTFS/" /bin/bash -c "update-rc.d firstrun defaults 2>&1 >/dev/null"
 
@@ -131,6 +131,7 @@ sed -e "s/MIN_SPEED=\"0\"/MIN_SPEED=\"$CPUMIN\"/g" -i "$ROOTFS/etc/init.d/cpufre
 sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"$CPUMAX\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
 
 # configure bash: reverse search and shell completion
+echo -e "${GREENBOLD}Configuring shell...${RST}" >&1 >&2
 sed -e 's/# "\\e\[5~": history\-search\-backward/"\\e[5~": history-search-backward/' -i "$ROOTFS/etc/inputrc"
 sed -e 's/# "\\e\[6~": history\-search\-forward/"\\e[6~": history-search-forward/' -i "$ROOTFS/etc/inputrc"
 sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
@@ -144,7 +145,7 @@ cat << ISSUE >> "$ROOTFS/etc/issue"
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE
 
-echo -e "Configuring network"
+echo -e "${GREENBOLD}Configuring network...${RST}" >&1 >&2
 install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
 install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"

@@ -64,9 +64,10 @@ DESKTOP_PACKAGES+=( gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-ba
 #chromium
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
   chromium-codecs-ffmpeg-extra chromium-egl )
-  
+
 UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
-  libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils modemmanager )
+  libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils valgrind 
+  gnome-user-guide freepats cups cups-browsed )
 
 usage() {
  echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]
@@ -83,7 +84,12 @@ usage() {
     shell         Open an interactive shell in a rootfs
  " 
 }
-  
+
+GREEN="\e[32m"
+BOLD="\e[1m"
+RST="\e[0m"
+GREENBOLD=${GREEN}${BOLD}
+
 error() {
   #error($E_TEXT,$E_CODE)
 
@@ -240,7 +246,7 @@ destrapfull(){
         if [[ $CHOICE = [Yy] ]] ; then
             echo -n "Deleting... "
             rm -rf "$ROOTFS" || error
-            echo -e "Done!"
+            echo -e "${GREENBOLD}Done!${RST}"
         else
             error
         fi
@@ -258,7 +264,7 @@ destrapfull(){
     if [[ $CHOICE != [Nn] ]] ; then
       echo -n "Extracting... "
       tar -xzpf "$OLDLAS" || error
-      echo -e "Done!"
+      echo -e "${GREENBOLD}Done!${RST}"
     else
         source include/debootstrap.sh
     fi
