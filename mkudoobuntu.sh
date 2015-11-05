@@ -40,14 +40,14 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion
   bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
   vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
-  debconf-utils python-pip vim minicom )
+  python-pip vim minicom crda manpages systemd-services systemd-shim wireless-regdb )
 
 #udoo related
 BASE_PACKAGES+=( imx-vpu-cnm-9t hostapd )
 
 DESKTOP_PACKAGES=( arduino arduino-core evince transmission-gtk abiword file-roller 
-  scratch eog geany bluefish pavucontrol udoo-artwork dpkg-dev  
-  xinput-calibrator tightvncserver npm nodejs-legacy nodejs matchbox-keyboard )
+  scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
+  dpkg-dev matchbox-keyboard )
 
 #lubuntu
 DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
@@ -65,9 +65,17 @@ DESKTOP_PACKAGES+=( gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-ba
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
   chromium-codecs-ffmpeg-extra chromium-egl )
 
-UNWANTED_PACKAGES=( apport apport-symptoms python3-apport colord hplip libsane 
-  libsane-common libsane-hpaio printer-driver-postscript-hp sane-utils valgrind 
-  gnome-user-guide freepats cups cups-browsed )
+# from install recommends
+DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon bluez-alsa desktop-base 
+dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
+gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
+indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
+indicator-power indicator-session indicator-sound mousetweaks network-manager 
+network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
+pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
+session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable )
+
+UNWANTED_PACKAGES=( valgrind )
 
 usage() {
  echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]

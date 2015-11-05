@@ -26,7 +26,7 @@ checkroot
 umountroot
 
 export LC_ALL=C LANGUAGE=C LANG=C
-UBUNTURELEASE="vivid"
+UBUNTURELEASE="trusty"
 
 echo -e "${GREENBOLD}Starting debootstrap...${RST}" >&1 >&2
 
@@ -80,15 +80,14 @@ chroot "$ROOTFS/" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive"
 chroot "$ROOTFS/" /bin/bash -c "update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_MESSAGES=POSIX"
 
 echo -e "${GREENBOLD}Installing core packages...${RST}" >&1 >&2
-chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${BASE_PACKAGES[*]}"
+chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ${BASE_PACKAGES[*]}"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
   echo -e "${GREENBOLD}Installing desktop packages...${RST}" >&1 >&2
-  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install ${DESKTOP_PACKAGES[*]}"
+  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ${DESKTOP_PACKAGES[*]}"
 fi
 
 echo -e "${GREENBOLD}Removing unwanted packages...${RST}" >&1 >&2
-#touch "$ROOTFS/etc/init.d/modemmanager"
 chroot "$ROOTFS/" /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq ${UNWANTED_PACKAGES[*]}"
 
 echo -e "${GREENBOLD}APT cleanup...${RST}" >&1 >&2
