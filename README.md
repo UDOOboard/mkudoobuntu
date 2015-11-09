@@ -1,7 +1,7 @@
 ## mkudoobuntu
 This script creates SD-card images for UDOO boards. It supports both desktop and 
-headless images. The created images is as small as possible and expanded to the 
-card size at the first boot.
+headless images. The created images are as small as possible and expanded to the 
+whole card size during the first boot.
 
 ### Usage
     ./mkudoobuntu.sh [RECIPE [operation] [--force]]
@@ -13,12 +13,12 @@ card size at the first boot.
     install       Install a deb in rootfs from repos
     remove        Remove a deb from rootfs
     list          List installed pkg in rootfs
-    reimage       Make a new image from a modified rootfs
+    reimage       Make a new image from a rootfs
     configure     Reconfigure the rootfs
     shell         Open an interactive shell in a rootfs
     
 ### Prerequisites
-This script has been tested only on Ubuntu 15.04 and 14.04. 
+This script has been tested on Ubuntu 15.10, 15.04 and 14.04. 
 It may work on other Debian-like system.
 
 ### Supported boards
