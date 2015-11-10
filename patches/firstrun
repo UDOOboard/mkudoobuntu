@@ -28,29 +28,30 @@ do_expand_rootfs(){
   sync
   
   echo Probing the partition table... 
-  
-#   if [[ -x `which partprobe` ]]
-#   then
-#     alias partread="partprobe"
-#   else
-#     alias partread="partx -u"
-#   fi
-  
   partx -u ${rootpart} || return $?
   
   echo Resizing the partition... 
   resize2fs ${rootpart} || return $?
 }
 
+regenerate_ssh_keys(){
+  echo "SSH keys recreation. One moment please"
+  rm -f /etc/ssh/ssh_host*
+  dpkg-reconfigure openssh-server
+  rm /etc/init/ssh.override
+  service ssh start
+}
+
+on_background(){
+  sleep 5
+  regenerate_ssh_keys
+  echo "Removing firstrun script"
+  update-rc.d -f firstrun remove >/dev/null 2>&1 
+}
+
 case "$1" in
   start)
-    reboot=false
-
-    echo -e "SSH keys recreation. One moment please" 
-    rm -f /etc/ssh/ssh_host*
-    dpkg-reconfigure openssh-server
     set +e
-    
     echo "Expanding rootfs..." 
 
     if do_expand_rootfs ;
@@ -60,10 +61,7 @@ case "$1" in
       echo "Expanding rootfs has failed, see log files. Error code: $?" 
     fi
 
-    update-rc.d -f firstrun remove >/dev/null 2>&1 
-    
-    rm /etc/init/ssh.override
-    service ssh start
+    on_background &
     
     if `rm /etc/init/lightdm.override 2>/dev/null`
       then
