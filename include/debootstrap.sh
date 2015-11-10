@@ -49,7 +49,7 @@ else
     
     debootstrap  --foreign \
                  --arch=armhf \
-                 --include=ubuntu-keyring \
+                 --include=ubuntu-keyring,apt-transport-https \
                  $UBUNTURELEASE "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
 
     (( $? )) && error "Debootstrap exited with error $?"
@@ -73,14 +73,17 @@ else
     install -m 644 patches/01proxy          "$ROOTFS/etc/apt/apt.conf.d/01proxy"
     install -m 644 patches/sources.list     "$ROOTFS/etc/apt/sources.list"
     install -m 644 patches/udoo.list        "$ROOTFS/etc/apt/sources.list.d/udoo.list"
+    install -m 644 patches/nodejs.list        "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
     install -m 644 patches/udoo.preferences "$ROOTFS/etc/apt/preferences.d/udoo"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list"
+    sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
 
     echo -e "${GREENBOLD}Adding APT repositories keys...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt-key add /tmp/gpg.key"
     rm "$ROOTFS/tmp/gpg.key"
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5"
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32"
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280"
 
     echo -e "${GREENBOLD}Updating APT repositories...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt-get -y update"
