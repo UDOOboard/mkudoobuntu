@@ -47,7 +47,7 @@ BASE_PACKAGES+=( imx-vpu-cnm-9t hostapd )
 
 DESKTOP_PACKAGES=( arduino arduino-core evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
-  dpkg-dev matchbox-keyboard )
+  dpkg-dev matchbox-keyboard socat )
 
 #lubuntu
 DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
