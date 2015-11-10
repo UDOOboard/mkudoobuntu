@@ -239,8 +239,7 @@ destrapfull(){
     
   if [ -d "$ROOTFS" ]; then
     umountroot
-    
-  checkPackage $HOST_PACKAGES
+    checkPackage $HOST_PACKAGES
   
     local -i FORCE=$1
     
@@ -260,6 +259,7 @@ destrapfull(){
         fi
     fi
   fi
+  
   #resume old debootstrap
   OLDDEB=( ${ROOTFS}_deboot*.tar.gz )
   OLDLEN=${#OLDDEB[*]}
