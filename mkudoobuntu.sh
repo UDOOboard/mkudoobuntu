@@ -281,7 +281,7 @@ destrapfull(){
   fi
     
   source include/configure.sh
-#  source include/imager.sh
+  source include/imager.sh
 }
 
 ## START
