@@ -69,7 +69,6 @@ else
     done
 
     echo -e "${GREENBOLD}Configuring APT repositories...${RST}" >&1 >&2
-    cp patches/gpg.key "$ROOTFS/tmp/"
     install -m 644 patches/01proxy          "$ROOTFS/etc/apt/apt.conf.d/01proxy"
     install -m 644 patches/sources.list     "$ROOTFS/etc/apt/sources.list"
     install -m 644 patches/udoo.list        "$ROOTFS/etc/apt/sources.list.d/udoo.list"
@@ -79,8 +78,6 @@ else
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
 
     echo -e "${GREENBOLD}Adding APT repositories keys...${RST}" >&1 >&2
-    chroot "$ROOTFS/" /bin/bash -c "apt-key add /tmp/gpg.key"
-    rm "$ROOTFS/tmp/gpg.key"
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5" #ubuntu
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32" #ubuntu
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280" #nodejs
