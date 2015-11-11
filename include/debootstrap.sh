@@ -49,7 +49,7 @@ else
     
     debootstrap  --foreign \
                  --arch=armhf \
-                 --include=ubuntu-keyring,apt-transport-https \
+                 --include=ubuntu-keyring,apt-transport-https,ca-certificates,openssl \
                  $UBUNTURELEASE "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
 
     (( $? )) && error "Debootstrap exited with error $?"
@@ -81,9 +81,10 @@ else
     echo -e "${GREENBOLD}Adding APT repositories keys...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt-key add /tmp/gpg.key"
     rm "$ROOTFS/tmp/gpg.key"
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5"
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32"
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280"
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5" #ubuntu
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32" #ubuntu
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280" #nodejs
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 71F0E740"         #udoo
 
     echo -e "${GREENBOLD}Updating APT repositories...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt-get -y update"
