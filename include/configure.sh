@@ -28,18 +28,18 @@ mountroot
 
 echo -e "${GREENBOLD}Configuring system...${RST}" >&1 >&2
 # touchscreen conf
-mkdir -p "$ROOTFS/etc/X11/xorg.conf.d/"
-cp -f patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
-cp -f patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
+install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 
 # disable xapt
-cp -f patches/xapt-periodic.conf "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic.conf"
+install -m 744 patches/xapt-periodic.conf "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic.conf"
 
 # configure console
 echo -e "${GREENBOLD}Configuring console...${RST}" >&1 >&2
-cp -f patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
-cp -f patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
-cp -f patches/ttyGS0.conf "$ROOTFS/etc/init/ttyGS0.conf"
+install -m 744 patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
+install -m 744 patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
+install -m 744 patches/ttyGS0.conf "$ROOTFS/etc/init/ttyGS0.conf"
 rm -f "$ROOTFS/etc/init/tty3.conf"
 rm -f "$ROOTFS/etc/init/tty4.conf"
 rm -f "$ROOTFS/etc/init/tty5.conf"
@@ -109,14 +109,17 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
 	#desktop icons
-	mkdir "$ROOTFS/home/$USERNAMEPWD/Desktop"
-	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop"
-	cp "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	cp "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 755 -o 1000 -d \
+	  "$ROOTFS/home/$USERNAMEPWD/Desktop"
+
+	install -m 644 -o 1000 \
+    "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 644 -o 1000 \
+    "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	install -m 644 -o 1000 \
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	
+
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
 		install -m 644 patches/neo-audio/asound.state "$ROOTFS/var/lib/alsa/asound.state"
