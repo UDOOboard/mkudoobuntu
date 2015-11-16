@@ -1,3 +1,2 @@
 /dev/mmcblk0p2  /      ext4  defaults,noatime               0  0
 /dev/mmcblk0p1  /boot  vfat  defaults,noatime               0  0
-/boot/docs    /opt/udoo-web-conf/docs none defaults,bind,exec,nofail 0 0
