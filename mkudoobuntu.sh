@@ -45,7 +45,7 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
 #udoo related
 BASE_PACKAGES+=( imx-vpu-cnm-9t hostapd )
 
-DESKTOP_PACKAGES=( arduino arduino-core evince transmission-gtk abiword file-roller 
+DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
   dpkg-dev matchbox-keyboard socat )
 
