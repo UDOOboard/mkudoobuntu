@@ -66,6 +66,7 @@ install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 echo -e "${GREENBOLD}Configuring timezone...${RST}" >&1 >&2
 echo "UTC" > "$ROOTFS/etc/timezone"
 chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >/dev/null"
+install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
 
 # setup users
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
