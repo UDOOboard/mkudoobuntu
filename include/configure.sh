@@ -120,6 +120,8 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	install -m 644 -o 1000 \
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	
+	chown $USERNAMEPWD:$USERNAMEPWD "$ROOTFS/home/$USERNAMEPWD/Desktop/*"
 
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
