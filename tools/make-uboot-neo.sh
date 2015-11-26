@@ -28,8 +28,8 @@ if [ ! -e $ubootdir/u-boot.img ]; then
     exit 1
 fi
 
-dd if=/dev/zero of=$binarydir/$targetfile bs=1K count=350
-dd if=$ubootdir/SPL of=$binarydir/$targetfile bs=1K seek=0
+truncate $binarydir/$targetfile --size 500k
+dd if=$ubootdir/SPL of=$binarydir/$targetfile bs=1K seek=0 conv=notrunc
 dd if=$ubootdir/u-boot.img of=$binarydir/$targetfile bs=1K seek=68
 
 echo "Your u-boot is in $binarydir/$targetfile"
