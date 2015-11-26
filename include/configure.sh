@@ -53,8 +53,8 @@ echo manual > "$ROOTFS/etc/init/ssh.override"
 mkdir -p "$ROOTFS/selinux"
 
 # remove what's anyway not working
-#rm -f "$ROOTFS/etc/init/ureadahead*"
-#rm -f "$ROOTFS/etc/init/plymouth*"
+rm -f "$ROOTFS/etc/init/ureadahead*"
+rm -f "$ROOTFS/etc/init/plymouth*"
 
 #enable otg gadget
 if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
