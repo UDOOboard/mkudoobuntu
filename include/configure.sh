@@ -157,12 +157,6 @@ install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
 install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
-if [ -n "$UENV" ]
-	then
-	echo -e "Creating uEnv"
-	cat << EOF > "$ROOTFS/boot/uEnv.txt"
-$UENV
-EOF
-fi
+cp $UENV $ROOTFS/boot/uEnv.txt
 
 umountroot
