@@ -66,6 +66,7 @@ install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 echo -e "${GREENBOLD}Configuring timezone...${RST}" >&1 >&2
 echo "UTC" > "$ROOTFS/etc/timezone"
 chroot "$ROOTFS/" /bin/bash -c "dpkg-reconfigure -f noninteractive tzdata 2>&1 >/dev/null"
+install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
 
 # setup users
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
@@ -119,6 +120,8 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	install -m 644 -o 1000 \
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	
+	chown $USERNAMEPWD:$USERNAMEPWD "$ROOTFS/home/$USERNAMEPWD/Desktop/*"
 
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
