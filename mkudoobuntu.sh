@@ -42,8 +42,9 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
   python-pip vim minicom crda manpages systemd-services systemd-shim wireless-regdb )
 
-#udoo related
-BASE_PACKAGES+=( imx-vpu-cnm-9t hostapd )
+#UDOO related
+BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
+  imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd )
 
 DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
@@ -58,8 +59,9 @@ DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev )
   
 #gstreamer
-DESKTOP_PACKAGES+=( gstreamer0.10-tools gstreamer-tools gstreamer0.10-plugins-base 
-  gstreamer0.10-plugins-bad gstreamer0.10-plugins-good gstreamer0.10-pulseaudio) 
+DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
+  gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-pulseaudio 
+  gstreamer1.0-plugins-ugly gstreamer1.0-alsa )
 
 #chromium
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
