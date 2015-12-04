@@ -121,7 +121,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
-	chown $USERNAMEPWD:$USERNAMEPWD "$ROOTFS/home/$USERNAMEPWD/Desktop/*"
+	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
