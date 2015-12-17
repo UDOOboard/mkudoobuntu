@@ -44,7 +44,7 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
 
 #UDOO related
 BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
-  imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd )
+  imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd dtweb )
 
 DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
