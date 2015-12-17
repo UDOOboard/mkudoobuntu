@@ -1,9 +1,6 @@
-mmcroot=/dev/mmcblk0p2 rootwait rootfstype=ext4 rw uart_from_osc clk_ignore_unused cpuidle.off=1
+#save this file with unix-like newlines! (\n, 0x0A)
 
-m4last=/var/opt/m4/m4last.fw
-m4fw=/m4startup.fw
-
-m4last_cmd=ext2load mmc ${mmcdev}:2 0x84000000 ${m4last};
-m4fw_cmd=fatload mmc ${mmcdev}:${mmcpart} 0x84000000 ${m4fw}; bootaux 0x84000000
-
-uenvboot=if run m4last_cmd ; then bootaux 0x84000000 ; else run m4fw_cmd ; fi
+video_output=hdmi
+m4_enabled=true
+#m4last=/path/to/arduino/sketch.fw
+#fdt_file=/path/to/custom/devicetree.dtb
