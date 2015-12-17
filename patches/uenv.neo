@@ -1,0 +1,6 @@
+#save this file with unix-like newlines! (\n, 0x0A)
+
+video_output=hdmi
+m4_enabled=true
+#m4last=/path/to/arduino/sketch.fw
+#fdt_file=/path/to/custom/devicetree.dtb
