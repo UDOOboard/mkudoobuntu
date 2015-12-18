@@ -46,7 +46,7 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
 BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
   imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd dtweb )
 
-DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller 
+DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller libmtp-runtime 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator tightvncserver 
   dpkg-dev matchbox-keyboard socat )
 
@@ -57,7 +57,10 @@ DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearan
 #xorg
 DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev )
-  
+
+#dev
+DESKTOP_PACKAGES+=( automake default-jdk python-serial )
+
 #gstreamer
 DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
   gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly 
@@ -76,7 +79,7 @@ indicator-power indicator-session indicator-sound mousetweaks network-manager
 network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
 pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
 session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
-gnome-keyring zenity zenity-common openssh-server cpufrequtils nano wget )
+gnome-keyring zenity zenity-common )
 
 UNWANTED_PACKAGES=( valgrind )
 
