@@ -110,7 +110,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
 	#desktop icons
-	install -m 755 -o 1000 -d \
+	install -m 755 -o 1000 -g 1000 -d \
 	  "$ROOTFS/home/$USERNAMEPWD/Desktop"
 
 	install -m 644 -o 1000 \
