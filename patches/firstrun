@@ -19,7 +19,7 @@ set -e
 
 do_expand_rootfs(){
   device="/dev/"$(lsblk -idn -o NAME | grep mmc)
-  rootpart=$(df / --output=source | tail -n1)
+  rootpart=$(mount | sed -n -e 's/ on \/ .*//p')
   PARTITIONS=$(($(fdisk -l $device | grep $device | wc -l)-1))
   
   echo Editing the partition table... 
@@ -28,7 +28,7 @@ do_expand_rootfs(){
   sync
   
   echo Probing the partition table... 
-  partx -u ${rootpart} || return $?
+  partx -u ${device} || return $?
   
   echo Resizing the partition... 
   resize2fs ${rootpart} || return $?
