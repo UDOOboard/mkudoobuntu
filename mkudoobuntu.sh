@@ -128,6 +128,13 @@ usagee(){
   error "$1" "$2"
 }
 
+checkroot(){
+  if [ $(id -u) -ne 0 ] 
+  then
+    error "You're not root! Try execute: sudo $0"
+  fi
+}
+
 checkPackage(){
   declare -a PACKAGES
   for i in ${HOST_PACKAGES[*]}
@@ -145,8 +152,8 @@ checkPackage(){
     checkroot
     apt-get install ${PACKAGES[*]}
   fi
-
 }
+checkPackage $HOST_PACKAGES
 
 mountroot(){
   if [ -z "$ROOTFS" ] && [ "$ROOTFS" = "/"  ]
@@ -224,12 +231,6 @@ listdeb(){
   done
   umountroot
 }
-checkroot(){
-  if [ $(id -u) -ne 0 ] 
-  then
-    error "You're not root! Try execute: sudo $0"
-  fi
-}
 
 destrapfull(){
   #check if rootfs exist
@@ -245,7 +246,6 @@ destrapfull(){
     
   if [ -d "$ROOTFS" ]; then
     umountroot
-    checkPackage $HOST_PACKAGES
   
     local -i FORCE=$1
     
@@ -343,7 +343,6 @@ destrapfull(){
     ;;
     debootstrap)
         #configure
-        checkPackage $HOST_PACKAGES
         source include/debootstrap.sh
         ok
     ;;
