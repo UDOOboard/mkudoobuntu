@@ -1,6 +1,7 @@
 rootfs
 sdcard
 udoo-*
+debootstrap_*.tar.gz
 *.img
 *.zip
 *~
