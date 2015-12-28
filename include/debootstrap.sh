@@ -41,8 +41,8 @@ if [ -f "$OLDCORE_LAST" ]; then
     
     mountroot
     echo -e "${GREENBOLD}Installing updates from APT...${RST}" >&1 >&2
-    chroot "$ROOTFS/" /bin/bash -c "apt-get -y update"
-    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get -y dist-upgrade'
+    chroot "$ROOTFS/" /bin/bash -c "apt update"
+    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt -y full-upgrade'
     
 else
     echo -e "${GREENBOLD}Starting debootstrap...${RST}" >&1 >&2
@@ -69,11 +69,12 @@ else
     done
 
     echo -e "${GREENBOLD}Configuring APT repositories...${RST}" >&1 >&2
-    install -m 644 patches/01proxy          "$ROOTFS/etc/apt/apt.conf.d/01proxy"
-    install -m 644 patches/sources.list     "$ROOTFS/etc/apt/sources.list"
-    install -m 644 patches/udoo.list        "$ROOTFS/etc/apt/sources.list.d/udoo.list"
-    install -m 644 patches/nodejs.list        "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
-    install -m 644 patches/udoo.preferences "$ROOTFS/etc/apt/preferences.d/udoo"
+    install -m 644 patches/apt/01proxy           "$ROOTFS/etc/apt/apt.conf.d/01proxy"
+    install -m 644 patches/apt/99progressbar     "$ROOTFS/etc/apt/apt.conf.d/99progressbar"
+    install -m 644 patches/apt/sources.list      "$ROOTFS/etc/apt/sources.list"
+    install -m 644 patches/apt/udoo.list         "$ROOTFS/etc/apt/sources.list.d/udoo.list"
+    install -m 644 patches/apt/nodejs.list       "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
+    install -m 644 patches/apt/udoo.preferences  "$ROOTFS/etc/apt/preferences.d/udoo"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
 
@@ -84,14 +85,14 @@ else
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 71F0E740"         #udoo
 
     echo -e "${GREENBOLD}Updating APT repositories...${RST}" >&1 >&2
-    chroot "$ROOTFS/" /bin/bash -c "apt-get -y update"
+    chroot "$ROOTFS/" /bin/bash -c "apt update"
 
     echo -e "${GREENBOLD}Fixing packages and installing upgrades...${RST}" >&1 >&2
-    chroot "$ROOTFS/" /bin/bash -c "apt-get -y -f install"
-    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get -y dist-upgrade'
+    chroot "$ROOTFS/" /bin/bash -c "apt -y -f install"
+    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt -y full-upgrade'
 
     echo -e "${GREENBOLD}Configuring locales...${RST}" >&1 >&2
-    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get -y -qq install locales'
+    chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt -y install locales'
     chroot "$ROOTFS/" /bin/bash -c "locale-gen en_US.UTF-8 it_IT.UTF-8 en_GB.UTF-8"
     chroot "$ROOTFS/" /bin/bash -c "export LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8"
     chroot "$ROOTFS/" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive"
@@ -105,15 +106,15 @@ else
 fi
 
 echo -e "${GREENBOLD}Installing core packages...${RST}" >&1 >&2
-chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ${BASE_PACKAGES[*]}"
+chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends ${BASE_PACKAGES[*]}"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
   echo -e "${GREENBOLD}Installing desktop packages...${RST}" >&1 >&2
-  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ${DESKTOP_PACKAGES[*]}"
+  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends ${DESKTOP_PACKAGES[*]}"
 fi
 
 echo -e "${GREENBOLD}Removing unwanted packages...${RST}" >&1 >&2
-chroot "$ROOTFS/" /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get purge -y -qq ${UNWANTED_PACKAGES[*]}"
+chroot "$ROOTFS/" /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends purge ${UNWANTED_PACKAGES[*]}"
 
 echo -e "${GREENBOLD}APT cleanup...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c 'PATH=/fake:$PATH apt-get autoremove -y'

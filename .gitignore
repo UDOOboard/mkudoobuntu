@@ -1,6 +1,6 @@
 rootfs
 sdcard
-udoo*
+udoo-*
 *.img
 *.zip
 *~

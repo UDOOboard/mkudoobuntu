@@ -193,7 +193,7 @@ installdeb(){
   (( $# )) || error "Specify packages to install"
   
   mountroot
-  chroot $ROOTFS/ /bin/bash -c "apt-get update -y"
+  chroot $ROOTFS/ /bin/bash -c "apt update"
 #   for i in $@ 
 #   do 
 #     chroot $ROOTFS/ /bin/bash -c "apt-cache showpkg -q $i >/dev/null" || 
@@ -204,7 +204,7 @@ installdeb(){
   
   for i in $@
   do
-    chroot $ROOTFS/ /bin/bash -c "apt-get install -y $i" || error
+    chroot $ROOTFS/ /bin/bash -c "apt -y install $i" || error
   done
   chroot $ROOTFS/ /bin/bash -c "apt-get clean -y"
   umountroot
