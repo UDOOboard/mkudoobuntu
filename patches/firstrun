@@ -32,6 +32,7 @@ do_expand_rootfs(){
   
   echo Resizing the partition... 
   resize2fs ${rootpart} || return $?
+  sync
 }
 
 regenerate_ssh_keys(){
@@ -43,10 +44,11 @@ regenerate_ssh_keys(){
 }
 
 on_background(){
-  sleep 5
+  sleep 10
   regenerate_ssh_keys
   echo "Removing firstrun script"
-  update-rc.d -f firstrun remove >/dev/null 2>&1 
+  update-rc.d -f firstrun remove >/dev/null 2>&1
+  sync
 }
 
 case "$1" in
