@@ -31,7 +31,7 @@ umount -lf sdcard
 
 #guessing sd image size..
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
-SDSIZE="$(( $ROOTSIZE / 1000 + $ROOTSIZE / 7000 ))"
+SDSIZE="$(( $ROOTSIZE * 115 / 100000 ))"
 
 echo -e "${GREENBOLD}Creating a $SDSIZE MB image...${RST}" >&1 >&2
 OUTPUT+="_$(date +%Y%m%d%H%M).img"
