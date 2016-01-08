@@ -72,7 +72,7 @@ install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | x11vnc -storepasswd /etc/x11vnc.pass"
+  chroot "$ROOTFS/" /bin/bash -c "x11vnc -storepasswd $USERNAMEPWD /etc/x11vnc.pass"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
