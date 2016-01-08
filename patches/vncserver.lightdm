@@ -1,7 +1,0 @@
-[VNCServer]
-enabled=true
-port=5900
-width=1366
-height=768
-depth=24
-command=/usr/bin/Xvnc -rfbauth /etc/vncpasswd

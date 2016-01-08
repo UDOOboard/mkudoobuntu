@@ -72,7 +72,7 @@ install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | vncpasswd -f > /etc/vncpasswd"
+  chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD | x11vnc -storepasswd /etc/x11vnc.pass"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
@@ -90,7 +90,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo manual > "$ROOTFS/etc/init/lightdm.override"
 	mkdir "$ROOTFS/etc/lightdm/lightdm.conf.d"
 	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
-	install -m 644 patches/vncserver.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/12-vncserver.conf"
+	install -m 644 patches/x11vnc.conf "$ROOTFS/etc/init/x11vnc.conf"
 	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
 	install -m 644 patches/autologin.accountservice "$ROOTFS/var/lib/AccountsService/users/$USERNAMEPWD"
 
