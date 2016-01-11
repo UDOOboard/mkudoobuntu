@@ -121,6 +121,8 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
+	ln -sf '/usr/bin/chromium-egl' '/etc/alternatives/x-www-browser'
+
 	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
 	if [ "$HOSTNAME" = "udooneo" ]; then
