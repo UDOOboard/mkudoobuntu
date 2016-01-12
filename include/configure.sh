@@ -161,4 +161,8 @@ sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
 cp $UENV $ROOTFS/boot/uEnv.txt
 
+# set documentation link
+install -m 755 patches/10-help-text "$ROOTFS/etc/update-motd.d/10-help-text"
+chroot "$ROOTFS/" /bin/bash -c "run-parts /etc/update-motd.d/"
+
 umountroot
