@@ -79,7 +79,7 @@ indicator-power indicator-session indicator-sound mousetweaks network-manager
 network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
 pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
 session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
-gnome-keyring zenity zenity-common )
+gnome-keyring zenity zenity-common update-manager )
 
 UNWANTED_PACKAGES=( valgrind )
 

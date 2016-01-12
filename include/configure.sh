@@ -120,6 +120,9 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 	install -m 644 -o 1000 \
 		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 644 -o 1000 \
+		"$ROOTFS/usr/share/applications/update-manager.desktop" \
+		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
 	ln -sf '/usr/bin/chromium-egl' '/etc/alternatives/x-www-browser'
 
@@ -160,6 +163,13 @@ install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
 cp $UENV $ROOTFS/boot/uEnv.txt
+
+# remove updates from motd and autostart
+rm "$ROOTFS/etc/xdg/autostart/update-notifier.desktop"
+rm "$ROOTFS/etc/update-motd.d/90-updates-available"
+rm "$ROOTFS/etc/update-motd.d/91-release-upgrade"
+rm "$ROOTFS/etc/update-motd.d/98-reboot-required"
+chroot "$ROOTFS/" /bin/bash -c "run-parts /etc/update-motd.d/"
 
 # set documentation link
 install -m 755 patches/10-help-text "$ROOTFS/etc/update-motd.d/10-help-text"
