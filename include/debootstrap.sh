@@ -71,6 +71,7 @@ else
     echo -e "${GREENBOLD}Configuring APT repositories...${RST}" >&1 >&2
     install -m 644 patches/apt/01proxy           "$ROOTFS/etc/apt/apt.conf.d/01proxy"
     install -m 644 patches/apt/99progressbar     "$ROOTFS/etc/apt/apt.conf.d/99progressbar"
+    install -m 644 patches/apt/90-xapt-periodic  "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic"
     install -m 644 patches/apt/sources.list      "$ROOTFS/etc/apt/sources.list"
     install -m 644 patches/apt/udoo.list         "$ROOTFS/etc/apt/sources.list.d/udoo.list"
     install -m 644 patches/apt/nodejs.list       "$ROOTFS/etc/apt/sources.list.d/nodejs.list"

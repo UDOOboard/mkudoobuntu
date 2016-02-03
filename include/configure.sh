@@ -32,9 +32,6 @@ install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
 install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 
-# disable xapt
-install -m 744 patches/xapt-periodic.conf "$ROOTFS/etc/apt/apt.conf.d/90-xapt-periodic.conf"
-
 # configure console
 echo -e "${GREENBOLD}Configuring console...${RST}" >&1 >&2
 install -m 744 patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
