@@ -46,6 +46,9 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
 BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
   imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd dtweb )
 
+#dev library
+BASE_PACKAGES+=( python-serial librxtx-java )
+
 DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller libmtp-runtime 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
   dpkg-dev matchbox-keyboard socat )
@@ -59,7 +62,7 @@ DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev )
 
 #dev
-DESKTOP_PACKAGES+=( automake default-jdk python-serial )
+DESKTOP_PACKAGES+=( automake default-jdk )
 
 #gstreamer
 DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
