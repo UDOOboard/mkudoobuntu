@@ -12,8 +12,7 @@
 # By default this script does nothing.
 
 if [ `date +"%Y"` -eq "1970" ]; then
-	date --set="2015-01-01"
+	date --set="2016-01-01"
 fi
 
 exit 0
-
