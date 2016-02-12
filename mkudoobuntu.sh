@@ -51,14 +51,14 @@ BASE_PACKAGES+=( python-serial librxtx-java )
 
 DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller libmtp-runtime 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  dpkg-dev matchbox-keyboard socat )
+  matchbox-keyboard socat )
 
 #lubuntu
 DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
   lxrandr lxshortcut lxinput lubuntu-software-center )
 
 #xorg
-DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
+DESKTOP_PACKAGES+=( imx-gpu-viv-10t7-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev )
 
 #dev
@@ -71,15 +71,15 @@ DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx
 
 #chromium
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
-  chromium-codecs-ffmpeg-extra chromium-egl )
+  chromium-codecs-ffmpeg-extra )
 
 # from install recommends
-DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon bluez-alsa desktop-base 
+DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon desktop-base 
 dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
 gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
 indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
 indicator-power indicator-session indicator-sound mousetweaks network-manager 
-network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
+network-manager-gnome obconf policykit-1-gnome pulseaudio 
 pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
 session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
 gnome-keyring zenity zenity-common update-manager )

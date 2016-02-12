@@ -1,2 +1,2 @@
-deb http://repository.udoo.org udoobuntu main
-#deb-src http://repository.udoo.org udoobuntu main
+deb http://repository.udoo.org/wily wily main
+#deb-src http://repository.udoo.org/wily wily main
