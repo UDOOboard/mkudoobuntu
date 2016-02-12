@@ -22,6 +22,8 @@
 #
 ################################################################################
 
+set -e
+
 checkroot
 umountroot
 
@@ -131,3 +133,5 @@ umountroot
 echo -e -n "${GREENBOLD}Debootstrap complete! Creating a backup tar... ${RST}" >&1 >&2
 tar -czpf "${ROOTFS}_deboot_$(date +%Y%m%d%H%M).tar.gz" "$ROOTFS"
 echo -e "${GREENBOLD}done!${RST}" >&1 >&2
+
+set +e
