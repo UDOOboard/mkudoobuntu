@@ -151,7 +151,7 @@ echo "alias ls='ls --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
 
-if [ -z "$RELEASE" ]; then
+if [ -n "$RELEASE" ]; then
 cat << ISSUE > "$ROOTFS/etc/issue"
 UDOObuntu v$RELEASE
 

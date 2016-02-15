@@ -33,10 +33,10 @@ umount -lf sdcard
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
 SDSIZE="$(( $ROOTSIZE * 115 / 100000 ))"
 
-if [ -z "$RELEASE" ]; then
+if [ -n "$RELEASE" ]; then
     OUTPUT+=$(echo $RELEASE | sed -e "s/ //g" | tr '[:upper:]' '[:lower:]' | awk '{print "_"$1".img"}')
 else
-    OUTPUT+="_$(date +%Y%m%d%H%M).img"
+    OUTPUT+="_$(date +%Y%m%d-%H%M).img"
 fi
 
 echo -e "${GREENBOLD}Creating a $SDSIZE MB image in $OUTPUT...${RST}" >&1 >&2
