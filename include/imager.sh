@@ -33,8 +33,13 @@ umount -lf sdcard
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
 SDSIZE="$(( $ROOTSIZE * 115 / 100000 ))"
 
-echo -e "${GREENBOLD}Creating a $SDSIZE MB image...${RST}" >&1 >&2
-OUTPUT+="_$(date +%Y%m%d%H%M).img"
+if [ -z "$RELEASE" ]; then
+    OUTPUT+=$(echo $RELEASE | sed -e "s/ //g" | tr '[:upper:]' '[:lower:]' | awk '{print "_"$1".img"}')
+else
+    OUTPUT+="_$(date +%Y%m%d%H%M).img"
+fi
+
+echo -e "${GREENBOLD}Creating a $SDSIZE MB image in $OUTPUT...${RST}" >&1 >&2
 dd if=/dev/zero of=$OUTPUT bs=1M count=$SDSIZE status=noxfer >/dev/null 2>&1
 
 LOOP=$(losetup -f)

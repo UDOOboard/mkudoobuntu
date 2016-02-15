@@ -149,10 +149,19 @@ echo "alias ls='ls --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
+
+if [ -z "$RELEASE" ]; then
+cat << ISSUE > "$ROOTFS/etc/issue"
+UDOObuntu v$RELEASE
+
+default username:password is [$USERNAMEPWD:$USERNAMEPWD]
+ISSUE
+else
 cat << ISSUE >> "$ROOTFS/etc/issue" 
 
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE
+fi
 
 echo -e "${GREENBOLD}Configuring network...${RST}" >&1 >&2
 install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
