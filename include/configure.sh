@@ -121,7 +121,8 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
 		"$ROOTFS/usr/share/applications/update-manager.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
-	ln -sf '/usr/bin/chromium-egl' '/etc/alternatives/x-www-browser'
+	chroot "$ROOTFS/" /bin/bash -c "update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/chromium-egl 50"
+	chroot "$ROOTFS/" /bin/bash -c "update-alternatives --set  x-www-browser /usr/bin/chromium-egl"
 
 	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
