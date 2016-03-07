@@ -11,7 +11,10 @@
 #needs: sudo apt-get install udhcpd
 #sudo sed -i -e 's:no:yes:g' /etc/default/udhcpd
 
-SerialNumber="0C-1234BBBK5678"
+H=`cat /sys/fsl_otp/HW_OCOTP_CFG0 |sed -e 's/0x//'`
+L=`cat /sys/fsl_otp/HW_OCOTP_CFG1 |sed -e 's/0x//'`
+SerialNumber=$H$L
+SerialNumber=${SerialNumber^^}
 Manufacturer="SECO-AIDILAB"
 Product="UDOONEO"
 
