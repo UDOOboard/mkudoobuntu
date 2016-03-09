@@ -40,7 +40,8 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
   bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
   vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
-  python-pip vim minicom crda manpages systemd-services systemd-shim wireless-regdb )
+  python-pip vim minicom crda manpages systemd-services systemd-shim wireless-regdb 
+  udoo-gpio-export ) 
 
 #UDOO related
 BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
@@ -75,14 +76,14 @@ DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver
 
 # from install recommends
 DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon bluez-alsa desktop-base 
-dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
-gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
-indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
-indicator-power indicator-session indicator-sound mousetweaks network-manager 
-network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
-pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
-session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
-gnome-keyring zenity zenity-common update-manager )
+  dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
+  gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
+  indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
+  indicator-power indicator-session indicator-sound mousetweaks network-manager 
+  network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
+  pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
+  session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
+  gnome-keyring zenity zenity-common update-manager )
 
 UNWANTED_PACKAGES=( valgrind )
 
