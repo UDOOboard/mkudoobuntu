@@ -42,7 +42,7 @@ rm -f "$ROOTFS/etc/init/tty4.conf"
 rm -f "$ROOTFS/etc/init/tty5.conf"
 rm -f "$ROOTFS/etc/init/tty6.conf"
 
-# enable root login
+# disable root login
 sed -i 's/PermitRootLogin without-password/PermitRootLogin no/' "$ROOTFS/etc/ssh/sshd_config"
 echo manual > "$ROOTFS/etc/init/ssh.override"
 
@@ -95,7 +95,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
     #check valid wallpaper
 	if [[ -n $WALLPAPER ]] && [[ ! -f "$ROOTFS/$WALLPAPER_NEW/$WALLPAPER.png" ]] 
     then
-        echo -e "Cannot found wallpaper $WALLPAPER"
+        echo -e "Cannot find wallpaper $WALLPAPER"
         unset WALLPAPER
     fi
     
