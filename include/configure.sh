@@ -53,29 +53,26 @@ mkdir -p "$ROOTFS/selinux"
 rm -f "$ROOTFS/etc/init/ureadahead"*
 rm -f "$ROOTFS/etc/init/plymouth"*
 
-#enable otg gadget
-if [ -f "$ROOTFS/usr/sbin/udhcpd" ]; then
-	sed -e "s/DHCPD_ENABLED/#\0/" -i "$ROOTFS/etc/default/udhcpd"
+if [ "$HOSTNAME" = "udooneo" ]; then
+	#enable otg gadget
+	install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
+	install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 fi
-install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
-install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
 
 install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
+install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 
 # setup users
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if [ "$BUILD_DESKTOP" = "yes" ]; then
-  chroot "$ROOTFS/" /bin/bash -c "x11vnc -storepasswd $USERNAMEPWD /etc/x11vnc.pass"
+	chroot "$ROOTFS/" /bin/bash -c "x11vnc -storepasswd $USERNAMEPWD /etc/x11vnc.pass"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
 fi
 chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
-
-# configure fstab
-install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 
 if [ "$BUILD_DESKTOP" = "yes" ]; then
 	echo -e "${GREENBOLD}Configuring desktop...${RST}" >&1 >&2
