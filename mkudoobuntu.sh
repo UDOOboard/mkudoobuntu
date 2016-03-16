@@ -22,8 +22,6 @@
 #
 ################################################################################
 
-RECIPES=recipes
-
 # Default wallpaper for lxde
 #
 # Available in udoo-artwork
@@ -300,7 +298,7 @@ destrapfull(){
 #no args
 (( $# )) || {
   echo "Pick a building recipe:"
-  select RECIPE in $RECIPES/*.conf
+  select RECIPE in recipes/*.conf
   do
     [[ $RECIPE == "" ]] && error "You have to pick a recipe!" 
     [ -e "$RECIPE" ] || error "Cannot find \"$1\" recipe"
@@ -311,6 +309,7 @@ destrapfull(){
     
     #compile
     source $RECIPE
+    ROOTFS=$OUTPUT
     checkroot
     
     destrapfull
@@ -324,8 +323,9 @@ destrapfull(){
     exit 0
     ;;
 *)
-    [ -e "$RECIPES/$1.conf" ] || usagee "Cannot find \"$1\" recipe"
-    source $RECIPES/"$1".conf
+    [ -e "recipes/$1.conf" ] || usagee "Cannot find \"$1\" recipe"
+    source recipes/"$1".conf
+    ROOTFS=$OUTPUT
     
     shift
     
