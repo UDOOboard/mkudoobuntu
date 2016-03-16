@@ -244,13 +244,13 @@ debootstrapfull() {
     umountroot
   
     #delete old fs
-#    echo -n "Deleting old root filesystem $ROOTFS/ in 5 seconds... "
-#    sleep 5
-#    rm -rf "$ROOTFS" || error
-#    echo -e "${GREENBOLD}done!${RST}"
+    echo -n "Deleting old root filesystem $ROOTFS/ in 5 seconds... "
+    sleep 5
+    rm -rf "$ROOTFS" || error
+    echo -e "${GREENBOLD}done!${RST}"
   fi
   
-  #source include/debootstrap.sh
+  source include/debootstrap.sh
   source include/configure.sh
   source include/imager.sh
 }
