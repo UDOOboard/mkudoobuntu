@@ -30,7 +30,6 @@ umountroot
 export LC_ALL=C LANGUAGE=C LANG=C
 UBUNTURELEASE="trusty"
 
-
 OLDCORE=( debootstrap_${UBUNTURELEASE}_*.tar.gz )
 OLDCORE_LEN=${#OLDCORE[*]}
 OLDCORE_LAST=${OLDCORE[$OLDCORE_LEN-1]}
@@ -111,9 +110,11 @@ fi
 echo -e "${GREENBOLD}Installing core packages...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends ${BASE_PACKAGES[*]}"
 
-if [ "$BUILD_DESKTOP" = "yes" ]; then
-  echo -e "${GREENBOLD}Installing desktop packages...${RST}" >&1 >&2
-  chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends ${DESKTOP_PACKAGES[*]}"
+recipe_pkgs=PACKAGES_$FLAVOUR[*]
+recipe_pkgs=${!recipe_pkgs}
+if [ ! -z "$recipe_pkgs" ]; then
+    echo -e "${GREENBOLD}Installing $FLAVOUR packages...${RST}" >&1 >&2
+    echo "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends $recipe_pkgs"
 fi
 
 echo -e "${GREENBOLD}Removing unwanted packages...${RST}" >&1 >&2
@@ -129,9 +130,5 @@ rm "$ROOTFS/etc/apt/apt.conf.d/01proxy"
 rm -rf "$ROOTFS/fake"
 
 umountroot
-
-echo -e -n "${GREENBOLD}Debootstrap complete! Creating a backup tar... ${RST}" >&1 >&2
-tar -czpf "${ROOTFS}_deboot_$(date +%Y%m%d%H%M).tar.gz" "$ROOTFS"
-echo -e "${GREENBOLD}done!${RST}" >&1 >&2
 
 set +e

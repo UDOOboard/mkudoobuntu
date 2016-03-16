@@ -23,14 +23,14 @@
 ################################################################################
 
 checkroot
-
 mountroot
 
+package_installed() {
+	chroot "$ROOTFS/" /bin/bash -c "dpkg -l $1 > /dev/null 2>&1"
+	return $?
+}
+
 echo -e "${GREENBOLD}Configuring system...${RST}" >&1 >&2
-# touchscreen conf
-install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
-install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
-install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 
 # configure console
 echo -e "${GREENBOLD}Configuring console...${RST}" >&1 >&2
@@ -65,7 +65,7 @@ install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 # setup users
 echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
-if [ "$BUILD_DESKTOP" = "yes" ]; then
+if package_installed "x11vnc"; then
 	chroot "$ROOTFS/" /bin/bash -c "x11vnc -storepasswd $USERNAMEPWD /etc/x11vnc.pass"
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
 else
@@ -74,8 +74,14 @@ fi
 chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
-if [ "$BUILD_DESKTOP" = "yes" ]; then
+if package_installed "xserver-xorg-core"; then
 	echo -e "${GREENBOLD}Configuring desktop...${RST}" >&1 >&2
+	
+	# touchscreen conf
+	install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
+	install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+	install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
 	sed -i 's/and plymouth-ready//' "$ROOTFS/etc/init/lightdm.conf"
 	echo manual > "$ROOTFS/etc/init/lightdm.override"
@@ -95,9 +101,7 @@ if [ "$BUILD_DESKTOP" = "yes" ]; then
         echo -e "Cannot find wallpaper $WALLPAPER"
         unset WALLPAPER
     fi
-    
 	WALLPAPER_NEW+=/${WALLPAPER:-$WALLPAPER_DEF}.png
-
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
 	#desktop icons
@@ -165,12 +169,14 @@ sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
 cp $UENV $ROOTFS/boot/uEnv.txt
 
-# remove updates from motd and autostart
-rm "$ROOTFS/etc/xdg/autostart/update-notifier.desktop"
-rm "$ROOTFS/etc/update-motd.d/90-updates-available"
-rm "$ROOTFS/etc/update-motd.d/91-release-upgrade"
-rm "$ROOTFS/etc/update-motd.d/98-reboot-required"
-chroot "$ROOTFS/" /bin/bash -c "run-parts /etc/update-motd.d/"
+if package_installed "update-manager"; then
+	# remove updates from motd and autostart
+	rm "$ROOTFS/etc/xdg/autostart/update-notifier.desktop"
+	rm "$ROOTFS/etc/update-motd.d/90-updates-available"
+	rm "$ROOTFS/etc/update-motd.d/91-release-upgrade"
+	rm "$ROOTFS/etc/update-motd.d/98-reboot-required"
+	chroot "$ROOTFS/" /bin/bash -c "run-parts /etc/update-motd.d/"
+fi
 
 # set documentation link
 install -m 755 patches/10-help-text "$ROOTFS/etc/update-motd.d/10-help-text"

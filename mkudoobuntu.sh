@@ -83,20 +83,22 @@ DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon bluez-alsa desktop-ba
   session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
   gnome-keyring zenity zenity-common update-manager )
 
+UDOOLXDE=${DESKTOP_PACKAGES[*]}
+
 UNWANTED_PACKAGES=( valgrind )
 
 usage() {
- echo "./mkudoobuntu.sh [RECIPE [operation] [--force]]
+ echo "To debootstrap a new image, use:
+    ./mkudoobuntu.sh <recipe> <flavour>
 
-    <none>        Select a recipe interactively
-    RECIPE        Start debootstrapping a recipe
+To edit a previously debootstrapped rootfs, use:
+    ./mkudoobuntu.sh <recipe> <operation>
 
-    --force       Don't ask 
+<operation> can be:
     install       Install a deb in rootfs from repos
     remove        Remove a deb from rootfs
     list          List installed pkg in rootfs
     reimage       Make a new image from a modified rootfs
-    configure     Reconfigure the rootfs
     shell         Open an interactive shell in a rootfs
  " 
 }
@@ -107,8 +109,6 @@ RST="\e[0m"
 GREENBOLD=${GREEN}${BOLD}
 
 error() {
-  #error($E_TEXT,$E_CODE)
-
   local E_TEXT=$1
   local E_CODE=$2
   
@@ -118,26 +118,25 @@ error() {
 }
 
 ok() {
-  #ok($OK_TEXT)
   local OK_TEXT=$1
   [[ -z $OK_TEXT ]] && OK_TEXT="Success!!"
   [[ -z $OK_TEXT ]] || echo $OK_TEXT 
   exit 0
 }
 
-usagee(){
+usageerror() {
   usage
   error "$1" "$2"
 }
 
-checkroot(){
+checkroot() {
   if [ $(id -u) -ne 0 ] 
   then
     error "You're not root! Try execute: sudo $0"
   fi
 }
 
-checkPackage(){
+checkPackage() {
   declare -a PACKAGES
   for i in ${HOST_PACKAGES[*]}
     do
@@ -157,7 +156,7 @@ checkPackage(){
 }
 checkPackage $HOST_PACKAGES
 
-mountroot(){
+mountroot() {
   if [ -z "$ROOTFS" ] && [ "$ROOTFS" = "/"  ]
   then
     error "Rootfs variable not defined. Check the recipe"
@@ -175,7 +174,7 @@ mountroot(){
   mount -t devpts chpts "$ROOTFS/dev/pts"
 }
 
-umountroot(){
+umountroot() {
   checkroot
   for i in proc sys dev/pts dev 
   do
@@ -185,24 +184,17 @@ umountroot(){
   done
 }
 
-chrootshell(){
+chrootshell() {
   mountroot
   chroot $ROOTFS/ /bin/bash
   umountroot
 }
 
-installdeb(){
+installdeb() {
   (( $# )) || error "Specify packages to install"
   
   mountroot
   chroot $ROOTFS/ /bin/bash -c "apt update"
-#   for i in $@ 
-#   do 
-#     chroot $ROOTFS/ /bin/bash -c "apt-cache showpkg -q $i >/dev/null" || 
-#       error "Package \"$i\" not found"         	 
-#   done
-  
-  # apt-get install with more than one package is not working. why?
   
   for i in $@
   do
@@ -212,7 +204,7 @@ installdeb(){
   umountroot
 }
 
-removedeb(){
+removedeb() {
   (( $# )) || error "Specify packages to uninstall"
   mountroot
   for i in $@ 
@@ -224,7 +216,7 @@ removedeb(){
   umountroot
 }
 
-listdeb(){
+listdeb() {
   mountroot
   (( $# == 0 )) && chroot $ROOTFS/ /bin/bash -c "dpkg -l"
   for i in $@
@@ -234,143 +226,80 @@ listdeb(){
   umountroot
 }
 
-destrapfull(){
-  #check if rootfs exist
-  local -i FORCE=0
-  while (( $# ))
-  do 
-      case $1 in
-          --force) shift; FORCE=1 ;;
-          *) usagee "Option \"$1\" not recognized"  ;;
-      esac
-      shift
+debootstrapfull() {
+  validRecipe=false
+  for flavour in "${FLAVOURS[@]}"; do
+    if [ "$flavour" == "$1" ] ; then
+      validRecipe=true
+    fi
   done
-    
+
+  if ! $validRecipe ; then
+    usageerror "Invalid flavour/argument: $1! Valid options are: ${FLAVOURS[*]}."
+  fi
+  FLAVOUR=$1
+
+  #check if rootfs exist
   if [ -d "$ROOTFS" ]; then
     umountroot
   
-    local -i FORCE=$1
-    
     #delete old fs
-    if (( $FORCE ))
-       then rm -rf "$ROOTFS" || error
-    else
-        echo -n "Deleting old root filesystem, are you sure? (y/N) " >&2 >&1
-        read CHOICE
-    
-        if [[ $CHOICE = [Yy] ]] ; then
-            echo -n "Deleting... "
-            rm -rf "$ROOTFS" || error
-            echo -e "${GREENBOLD}Done!${RST}"
-        else
-            error
-        fi
-    fi
+#    echo -n "Deleting old root filesystem $ROOTFS/ in 5 seconds... "
+#    sleep 5
+#    rm -rf "$ROOTFS" || error
+#    echo -e "${GREENBOLD}done!${RST}"
   fi
   
-  #resume old debootstrap
-  OLDDEB=( ${ROOTFS}_deboot*.tar.gz )
-  OLDLEN=${#OLDDEB[*]}
-  OLDLAS=${OLDDEB[$OLDLEN-1]}  ## last backup
- 
-  if [ -f "$OLDLAS" ] && (( ! $FORCE )) ; then
-    echo -n "Found old debootstrap tar ($OLDLAS), use it?  (Y/n) " >&2 >&1
-    read CHOICE
-    
-    if [[ $CHOICE != [Nn] ]] ; then
-      echo -n "Extracting... "
-      tar -xzpf "$OLDLAS" || error
-      echo -e "${GREENBOLD}Done!${RST}"
-    else
-        source include/debootstrap.sh
-    fi
-  else
-     source include/debootstrap.sh
-  fi
-    
+  #source include/debootstrap.sh
   source include/configure.sh
   source include/imager.sh
 }
 
 ## START
 
-
-#no args
-(( $# )) || {
-  echo "Pick a building recipe:"
-  select RECIPE in recipes/*.conf
-  do
-    [[ $RECIPE == "" ]] && error "You have to pick a recipe!" 
-    [ -e "$RECIPE" ] || error "Cannot find \"$1\" recipe"
-    
-    echo -n "You picked \"$RECIPE\", starting debootstrapping? (Y/n) "
-    read CHOICE
-    [[ $CHOICE =~ "n" ]] && exit 0
-    
-    #compile
-    source $RECIPE
-    ROOTFS=$OUTPUT
-    checkroot
-    
-    destrapfull
-    ok
-  done
-}
-    
-(( $# )) && case $1 in
-*help|*usage) 
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ] ; then
     usage
-    exit 0
-    ;;
-*)
-    [ -e "recipes/$1.conf" ] || usagee "Cannot find \"$1\" recipe"
-    source recipes/"$1".conf
-    ROOTFS=$OUTPUT
+    exit 1
+fi
     
-    shift
-    
-    #other argument
-    
-    case $1 in
-    
-    install) shift
-        #install other packages
-        installdeb $@ && ok
-    ;;
-    remove) shift
-        #remove packages
-        removedeb $@ && ok
-    ;;
-    list) shift
-        #list packages
-        listdeb && ok
-    ;;
-    debootstrap)
-        #configure
-        source include/debootstrap.sh
-        ok
-    ;;
-    configure)
-        #configure
-        source include/configure.sh
-        ok
-    ;;
-    reimage) 
-        source include/imager.sh
-        ok
-    ;;
-    shell)
-        chrootshell && ok
-    ;;
-    *)  
-        #install from scratch
+case $1 in
+    *help|*usage) 
+        usage
+        exit 0
+        ;;
+    *)
+        [ -e "recipes/$1.conf" ] || usageerror "Cannot find \"$1\" recipe"
+        source recipes/"$1".conf
+        ROOTFS=$OUTPUT
         
-        checkroot
-        
-        destrapfull $@
-
-        ok
-    ;;
-    esac
+        shift
+        #other argument
+        case $1 in
+            install) shift
+                installdeb $@ && ok
+            ;;
+            remove) shift
+                removedeb $@ && ok
+            ;;
+            list) shift
+                listdeb && ok
+            ;;
+            debootstrap)
+                source include/debootstrap.sh
+                ok
+            ;;
+            reimage)
+                source include/imager.sh
+                ok
+            ;;
+            shell)
+                chrootshell && ok
+            ;;
+            *)
+                checkroot
+                debootstrapfull $@
+                ok
+            ;;
+        esac
 esac
-    
+
