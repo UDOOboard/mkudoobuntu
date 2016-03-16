@@ -83,8 +83,7 @@ mkdir sdcard/var/tmp
 chmod o+t,ugo+rw sdcard/var/tmp
 
 echo -e "${GREENBOLD}Writing U-BOOT...${RST}" >&1 >&2
-# write bootloader
-dd if="$UBOOT" of="$LOOP" bs=1k seek=1
+dd if=boards/$BOARD/uboot.imx of="$LOOP" bs=1k seek=1
 sync
 
 umount -lf sdcard/boot

@@ -53,7 +53,7 @@ mkdir -p "$ROOTFS/selinux"
 rm -f "$ROOTFS/etc/init/ureadahead"*
 rm -f "$ROOTFS/etc/init/plymouth"*
 
-if [ "$HOSTNAME" = "udooneo" ]; then
+if [ "$BOARD" = "udoo-neo" ]; then
 	#enable otg gadget
 	install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
 	install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
@@ -167,7 +167,7 @@ install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
 install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
-cp $UENV $ROOTFS/boot/uEnv.txt
+cp boards/$BOARD/uEnv.txt $ROOTFS/boot/uEnv.txt
 
 if package_installed "update-manager"; then
 	# remove updates from motd and autostart

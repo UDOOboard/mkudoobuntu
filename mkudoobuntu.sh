@@ -88,11 +88,16 @@ UDOOLXDE=${DESKTOP_PACKAGES[*]}
 UNWANTED_PACKAGES=( valgrind )
 
 usage() {
- echo "To debootstrap a new image, use:
-    ./mkudoobuntu.sh <recipe> <flavour>
+ echo "To debootstrap a new unnamed image, use:
+    sudo ./mkudoobuntu.sh <board> <flavour>
+
+Branded-release images can be generated with:
+    sudo RELEASE=\"2.0 Beta6\" ./mkudoobuntu.sh <board> <flavour>
 
 To edit a previously debootstrapped rootfs, use:
-    ./mkudoobuntu.sh <recipe> <operation>
+    sudo ./mkudoobuntu.sh <board> <operation>
+
+<board> can be: udoo-qdl, udoo-neo.
 
 <operation> can be:
     install       Install a deb in rootfs from repos
@@ -104,6 +109,7 @@ To edit a previously debootstrapped rootfs, use:
 }
 
 GREEN="\e[32m"
+RED="\e[31m"
 BOLD="\e[1m"
 RST="\e[0m"
 GREENBOLD=${GREEN}${BOLD}
@@ -113,7 +119,7 @@ error() {
   local E_CODE=$2
   
   [[ -z $E_CODE ]] && E_CODE=1
-  [[ -z $E_TEXT ]] || echo $E_TEXT >&2
+  [[ -z $E_TEXT ]] || echo -e $E_TEXT >&2
   exit $E_CODE
 }
 
@@ -126,7 +132,7 @@ ok() {
 
 usageerror() {
   usage
-  error "$1" "$2"
+  error "${RED}${BOLD}$1${RST}" "$2"
 }
 
 checkroot() {
@@ -235,7 +241,7 @@ debootstrapfull() {
   done
 
   if ! $validRecipe ; then
-    usageerror "Invalid flavour/argument: $1! Valid options are: ${FLAVOURS[*]}."
+    usageerror "Invalid flavour/argument: $1! Valid flavours for $BOARD are: ${FLAVOURS[*]}."
   fi
   FLAVOUR=$1
 
@@ -268,8 +274,9 @@ case $1 in
         exit 0
         ;;
     *)
-        [ -e "recipes/$1.conf" ] || usageerror "Cannot find \"$1\" recipe"
-        source recipes/"$1".conf
+        [ -e "boards/$1/board.conf" ] || usageerror "Cannot find \"$1\" board definition."
+        source boards/$1/board.conf
+        BOARD=$1
         ROOTFS=$OUTPUT
         
         shift
