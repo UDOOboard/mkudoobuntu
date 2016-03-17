@@ -33,6 +33,8 @@ umount -lf sdcard
 ROOTSIZE="$(du -s "$ROOTFS" | cut -f 1)"
 SDSIZE="$(( $ROOTSIZE * 115 / 100000 ))"
 
+OUTPUT="udoobuntu-$BOARD-$FLAVOUR"
+
 if [ -n "$RELEASE" ]; then
     OUTPUT+=$(echo $RELEASE | sed -e "s/ //g" | tr '[:upper:]' '[:lower:]' | awk '{print "_"$1".img"}')
 else

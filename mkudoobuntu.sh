@@ -277,7 +277,7 @@ case $1 in
         [ -e "boards/$1/board.conf" ] || usageerror "Cannot find \"$1\" board definition."
         source boards/$1/board.conf
         BOARD=$1
-        ROOTFS=$OUTPUT
+        ROOTFS=$1
         
         shift
         #other argument
