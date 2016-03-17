@@ -114,7 +114,7 @@ recipe_pkgs=PACKAGES_$FLAVOUR[*]
 recipe_pkgs=${!recipe_pkgs}
 if [ ! -z "$recipe_pkgs" ]; then
     echo -e "${GREENBOLD}Installing $FLAVOUR packages...${RST}" >&1 >&2
-    echo "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends $recipe_pkgs"
+    chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends $recipe_pkgs"
 fi
 
 echo -e "${GREENBOLD}Removing unwanted packages...${RST}" >&1 >&2
