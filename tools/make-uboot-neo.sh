@@ -9,8 +9,8 @@ fi
 
 args=("$@")
 ubootdir=${args[0]}
-binarydir="$(dirname "$(pwd)")/binary"
-targetfile="uboot-neo.imx"
+binarydir="$(dirname "$(pwd)")/boards/udoo-neo"
+targetfile="uboot.imx"
 
 cd $ubootdir
 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make clean

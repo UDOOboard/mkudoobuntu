@@ -9,8 +9,8 @@ fi
 
 args=("$@")
 ubootdir=${args[0]}
-binarydir="$(dirname "$(pwd)")/binary"
-targetfile="uboot-qdl.imx"
+binarydir="$(dirname "$(pwd)")/boards/udoo-qdl"
+targetfile="uboot.imx"
 
 cd $ubootdir
 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make clean
