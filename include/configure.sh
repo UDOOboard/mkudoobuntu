@@ -26,7 +26,7 @@ checkroot
 mountroot
 
 package_installed() {
-	chroot "$ROOTFS/" /bin/bash -c "dpkg -l $1 > /dev/null 2>&1"
+	chroot "$ROOTFS/" /bin/bash -c "dpkg -l |grep $1 > /dev/null 2>&1"
 	return $?
 }
 
