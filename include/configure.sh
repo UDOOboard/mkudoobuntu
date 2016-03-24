@@ -93,7 +93,7 @@ if package_installed "xserver-xorg-core"; then
 
 	#wallpaper
 	WALLPAPER_OLD="/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
-	WALLPAPER_NEW="/usr/share/udoo/wallpapers"
+	WALLPAPER_NEW="/usr/share/wallpapers/udoo"
 
     #check valid wallpaper
 	if [[ -n $WALLPAPER ]] && [[ ! -f "$ROOTFS/$WALLPAPER_NEW/$WALLPAPER.png" ]] 

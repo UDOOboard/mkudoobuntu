@@ -29,8 +29,10 @@
 # UDOO-gray
 # UDOO-green
 # UDOO-pink
+# UDOO-circles
+# UDOO-steel
 
-WALLPAPER_DEF=UDOO-blue
+WALLPAPER_DEF=UDOO-circles
 
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
