@@ -26,13 +26,16 @@
 #
 # Available in udoo-artwork
 # UDOO-blue
+# UDOO-circles
+# UDOO-cli
+# UDOO-fresh
 # UDOO-gray
 # UDOO-green
 # UDOO-pink
-# UDOO-circles
 # UDOO-steel
+# UDOO-stellar
 
-WALLPAPER_DEF=UDOO-circles
+WALLPAPER_DEF=UDOO-fresh
 
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
