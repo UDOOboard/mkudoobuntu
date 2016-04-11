@@ -15,7 +15,7 @@ targetfile="uboot.imx"
 cd $ubootdir
 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make clean
 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make udoo_neo_config
-ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make
+ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make -j8
 cd -
 
 if [ ! -e $ubootdir/SPL ]; then

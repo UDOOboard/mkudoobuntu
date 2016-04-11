@@ -13,8 +13,8 @@ OUTPUT=/tmp/qdl-sata.img
 
 cd $ubootdir
 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make clean
-ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make udoo_qdl_sata_config
-ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make
+ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make udoo_qd_sata_config
+ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make -j8
 cd -
 
 if [ ! -e $ubootdir/SPL ]; then
