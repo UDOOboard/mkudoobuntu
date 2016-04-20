@@ -18,8 +18,17 @@ N=/etc/init.d/firstrun
 set -e
 
 do_expand_rootfs(){
-  device="/dev/"$(lsblk -idn -o NAME | grep mmc)
-  rootpart=$(mount | sed -n -e 's/ on \/ .*//p')
+  if grep -qs "sda2\s*/\s*" /etc/fstab; then
+    device="/dev/sda"
+    rootpart="/dev/sda2"
+  elif grep -qs "mmcblk0p2\s*/\s*" /etc/fstab; then
+    device="/dev/mmcblk0"
+    rootpart="/dev/mmcblk0p2"
+  else
+    device="/dev/"$(lsblk -idn -o NAME | grep mmc)
+    rootpart=$(mount | sed -n -e 's/ on \/ .*//p')
+  fi
+  
   PARTITIONS=$(($(fdisk -l $device | grep $device | wc -l)-1))
   
   echo Editing the partition table... 
