@@ -55,7 +55,7 @@ BASE_PACKAGES+=( python-serial librxtx-java )
 
 DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller libmtp-runtime 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  dpkg-dev matchbox-keyboard socat udoo-web-conf )
+  dpkg-dev matchbox-keyboard socat )
 
 #lubuntu
 DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
