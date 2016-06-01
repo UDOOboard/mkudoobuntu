@@ -76,6 +76,7 @@ else
     install -m 644 patches/apt/sources.list      "$ROOTFS/etc/apt/sources.list"
     install -m 644 patches/apt/udoo.list         "$ROOTFS/etc/apt/sources.list.d/udoo.list"
     install -m 644 patches/apt/nodejs.list       "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
+    install -m 644 patches/apt/wyliodrin.list    "$ROOTFS/etc/apt/sources.list.d/wyliodrin.list"
     install -m 644 patches/apt/udoo.preferences  "$ROOTFS/etc/apt/preferences.d/udoo"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
@@ -85,6 +86,7 @@ else
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32" #ubuntu
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280" #nodejs
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 71F0E740"         #udoo
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com FFDAB760"         #udoo extras
 
     echo -e "${GREENBOLD}Updating APT repositories...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt update"
