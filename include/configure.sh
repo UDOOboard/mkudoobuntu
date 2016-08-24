@@ -43,8 +43,7 @@ rm -f "$ROOTFS/etc/init/tty5.conf"
 rm -f "$ROOTFS/etc/init/tty6.conf"
 
 # disable root login
-sed -i 's/PermitRootLogin without-password/PermitRootLogin no/' "$ROOTFS/etc/ssh/sshd_config"
-echo manual > "$ROOTFS/etc/init/ssh.override"
+sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/' "$ROOTFS/etc/ssh/sshd_config"
 
 # fix selinux
 mkdir -p "$ROOTFS/selinux"
@@ -83,7 +82,6 @@ if package_installed "xserver-xorg-core"; then
 
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
 	sed -i 's/and plymouth-ready//' "$ROOTFS/etc/init/lightdm.conf"
-	echo manual > "$ROOTFS/etc/init/lightdm.override"
 	mkdir -p "$ROOTFS/etc/lightdm/lightdm.conf.d"
 	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
 	install -m 644 patches/x11vnc.conf "$ROOTFS/etc/init/x11vnc.conf"
@@ -122,10 +120,6 @@ if package_installed "xserver-xorg-core"; then
 		install -m 644 patches/neo-audio/asound.state "$ROOTFS/var/lib/alsa/asound.state"
 	fi
 fi
-
-echo -e "${GREENBOLD}Installing first boot service...${RST}" >&1 >&2
-install -m 755 patches/firstrun  "$ROOTFS/etc/init.d"
-chroot "$ROOTFS/" /bin/bash -c "update-rc.d firstrun defaults 2>&1 >/dev/null"
 
 # configure MIN / MAX speed for cpufrequtils
 sed -e "s/MIN_SPEED=\"0\"/MIN_SPEED=\"392000\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
