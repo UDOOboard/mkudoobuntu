@@ -50,8 +50,7 @@ echo manual > "$ROOTFS/etc/init/ssh.override"
 mkdir -p "$ROOTFS/selinux"
 
 # remove what's anyway not working
-rm -f "$ROOTFS/etc/init/ureadahead"*
-rm -f "$ROOTFS/etc/init/plymouth"*
+chroot "$ROOTFS/" /bin/bash -c "systemctl disable ureadahead.service"
 
 if [ "$BOARD" = "udoo-neo" ]; then
 	#enable otg gadget
