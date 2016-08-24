@@ -110,8 +110,10 @@ if package_installed "xserver-xorg-core"; then
 		"$ROOTFS/usr/share/applications/update-manager.desktop" \
 		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
 	
-	chroot "$ROOTFS/" /bin/bash -c "update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/chromium-egl 50"
-	chroot "$ROOTFS/" /bin/bash -c "update-alternatives --set  x-www-browser /usr/bin/chromium-egl"
+	if package_installed "chromium-egl"; then
+		chroot "$ROOTFS/" /bin/bash -c "update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/chromium-egl 50"
+		chroot "$ROOTFS/" /bin/bash -c "update-alternatives --set  x-www-browser /usr/bin/chromium-egl"
+	fi
 
 	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
