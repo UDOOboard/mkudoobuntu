@@ -84,7 +84,7 @@ if package_installed "xserver-xorg-core"; then
 	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
 	sed -i 's/and plymouth-ready//' "$ROOTFS/etc/init/lightdm.conf"
 	echo manual > "$ROOTFS/etc/init/lightdm.override"
-	mkdir "$ROOTFS/etc/lightdm/lightdm.conf.d"
+	mkdir -p "$ROOTFS/etc/lightdm/lightdm.conf.d"
 	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
 	install -m 644 patches/x11vnc.conf "$ROOTFS/etc/init/x11vnc.conf"
 	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
