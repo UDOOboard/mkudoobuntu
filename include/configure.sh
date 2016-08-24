@@ -135,8 +135,8 @@ install -m 755 patches/firstrun  "$ROOTFS/etc/init.d"
 chroot "$ROOTFS/" /bin/bash -c "update-rc.d firstrun defaults 2>&1 >/dev/null"
 
 # configure MIN / MAX speed for cpufrequtils
-sed -e "s/MIN_SPEED=\"0\"/MIN_SPEED=\"$CPUMIN\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
-sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"$CPUMAX\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
+sed -e "s/MIN_SPEED=\"0\"/MIN_SPEED=\"392000\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
+sed -e "s/MAX_SPEED=\"0\"/MAX_SPEED=\"996000\"/g" -i "$ROOTFS/etc/init.d/cpufrequtils"
 
 # configure bash: reverse search and shell completion
 echo -e "${GREENBOLD}Configuring shell...${RST}" >&1 >&2
