@@ -28,50 +28,43 @@ BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1 udoo-first
   bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
   vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
   pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
-  python-pip vim minicom crda manpages systemd-services systemd-shim wireless-regdb 
-  udoo-gpio-export ) 
+  python-pip vim minicom crda manpages systemd systemd-shim wireless-regdb
+  udoo-gpio-export hostapd dtweb )
 
-#UDOO related
-BASE_PACKAGES+=( firmware-imx-9t fsl-alsa-plugins-9t imx-lib-9t imx-udev-fsl-rules 
-  imx-vpu-9t libfslcodec-9t libfslparser-9t libfslvpuwrap-9t hostapd dtweb )
+# VPU/Common
+BASE_PACKAGES+=( firmware-imx-12x imx-codec-12x imx-parser-12x imx-vpuwrap-12x 
+  imx-lib-12x imx-alsa-plugins-12x imx-vpu-12x imx-vpu-cnm-12x imx-udev-rules-x10 )
 
-#dev library
-BASE_PACKAGES+=( python-serial librxtx-java )
+# Development libraries
+BASE_PACKAGES+=( python-serial librxtx-java automake default-jdk )
 
-DESKTOP_PACKAGES=( evince transmission-gtk abiword file-roller libmtp-runtime 
+# Desktop
+DESKTOP_PACKAGES+=( imx-gpu-viv-x10-acc-x11 xserver-xorg-core xserver-common
+  xserver-xorg-dev libdrm-dev lubuntu-core leafpad lxterminal galculator lxtask 
+  lxappearance lxrandr lxshortcut lxinput lubuntu-software-center lxde-common 
+  lxde-core update-manager evince transmission-gtk abiword file-roller libmtp-runtime 
   scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  dpkg-dev matchbox-keyboard socat )
+  matchbox-keyboard socat )
 
-#lubuntu
-DESKTOP_PACKAGES+=( lubuntu-core leafpad lxterminal galculator lxtask lxappearance 
-  lxrandr lxshortcut lxinput lubuntu-software-center )
-
-#xorg
-DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
-  xserver-xorg-dev libdrm-dev )
-
-#dev
-DESKTOP_PACKAGES+=( automake default-jdk )
-
-#gstreamer
+# gstreamer
 DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
   gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly 
   gstreamer1.0-alsa )
 
-#chromium
+# chromium
 DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
-  chromium-codecs-ffmpeg-extra chromium-egl )
+  chromium-codecs-ffmpeg-extra )
 
-# from install recommends
-DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon bluez-alsa desktop-base 
+# From install recommends
+DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon desktop-base 
   dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
   gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
   indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
   indicator-power indicator-session indicator-sound mousetweaks network-manager 
-  network-manager-gnome obconf obexd-client policykit-1-gnome pulseaudio 
+  network-manager-gnome obconf policykit-1-gnome pulseaudio 
   pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
   session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
-  gnome-keyring zenity zenity-common update-manager )
+  gnome-keyring zenity zenity-common )
 
 UDOOLXDE=${DESKTOP_PACKAGES[*]}
 

@@ -28,7 +28,7 @@ checkroot
 umountroot
 
 export LC_ALL=C LANGUAGE=C LANG=C
-UBUNTURELEASE="trusty"
+UBUNTURELEASE="xenial"
 
 OLDCORE=( debootstrap_${UBUNTURELEASE}_*.tar.gz )
 OLDCORE_LEN=${#OLDCORE[*]}
