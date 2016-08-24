@@ -66,7 +66,7 @@ echo -e "${GREENBOLD}Setting users...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "echo root:$ROOTPWD | chpasswd"
 if package_installed "x11vnc"; then
 	chroot "$ROOTFS/" /bin/bash -c "x11vnc -storepasswd $USERNAMEPWD /etc/x11vnc.pass"
-	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,fuse,dialout $USERNAMEPWD"
+	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,video,audio,adm,dip,plugdev,dialout $USERNAMEPWD" #fuse
 else
 	chroot "$ROOTFS/" /bin/bash -c "useradd -U -m -G sudo,adm,dip,plugdev,dialout $USERNAMEPWD"
 fi
