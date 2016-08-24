@@ -92,15 +92,7 @@ if package_installed "xserver-xorg-core"; then
 
 	#wallpaper
 	WALLPAPER_OLD="/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
-	WALLPAPER_NEW="/usr/share/wallpapers/udoo"
-
-    #check valid wallpaper
-	if [[ -n $WALLPAPER ]] && [[ ! -f "$ROOTFS/$WALLPAPER_NEW/$WALLPAPER.png" ]] 
-    then
-        echo -e "Cannot find wallpaper $WALLPAPER"
-        unset WALLPAPER
-    fi
-	WALLPAPER_NEW+=/${WALLPAPER:-$WALLPAPER_DEF}.png
+	WALLPAPER_NEW="/usr/share/wallpapers/udoo/UDOO-fresh.png"
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
 	#desktop icons

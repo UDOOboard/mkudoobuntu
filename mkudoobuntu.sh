@@ -22,21 +22,6 @@
 #
 ################################################################################
 
-# Default wallpaper for lxde
-#
-# Available in udoo-artwork
-# UDOO-blue
-# UDOO-circles
-# UDOO-cli
-# UDOO-fresh
-# UDOO-gray
-# UDOO-green
-# UDOO-pink
-# UDOO-steel
-# UDOO-stellar
-
-WALLPAPER_DEF=UDOO-fresh
-
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
 BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1
