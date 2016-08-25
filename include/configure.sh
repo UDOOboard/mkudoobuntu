@@ -94,19 +94,10 @@ if package_installed "xserver-xorg-core"; then
 	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
 
 	#desktop icons
-	install -m 755 -o 1000 -g 1000 -d \
-	  "$ROOTFS/home/$USERNAMEPWD/Desktop"
-
-	install -m 644 -o 1000 \
-    "$ROOTFS/usr/share/applications/lxterminal.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	install -m 644 -o 1000 \
-    "$ROOTFS/usr/share/applications/arduino.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	install -m 644 -o 1000 \
-		"$ROOTFS/usr/share/applications/inputmethods/matchbox-keyboard.desktop" \
-		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	install -m 644 -o 1000 \
-		"$ROOTFS/usr/share/applications/update-manager.desktop" \
-		"$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	install -m 755 -o 1000 -g 1000 -d "$ROOTFS/home/$USERNAMEPWD/Desktop"
+	for APP in lxterminal arduino inputmethods/matchbox-keyboard update-manager; do
+		install -m 644 -o 1000 "$ROOTFS/usr/share/applications/$APP.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	done
 	
 	if package_installed "chromium-egl"; then
 		chroot "$ROOTFS/" /bin/bash -c "update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/chromium-egl 50"
