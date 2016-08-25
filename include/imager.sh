@@ -24,9 +24,8 @@
 
 checkroot
 
-echo -e "Unmount..."
 umountroot
-umount -lf sdcard/boot
+umount -lf sdcard/usbstorage
 umount -lf sdcard
 
 #guessing sd image size..
@@ -48,32 +47,28 @@ LOOP=$(losetup -f)
 losetup $LOOP $OUTPUT || error "Cannot set $LOOP" 
 
 OFFSET="1"
-BOOTSIZE="32"
-BOOTSTART=$(($OFFSET*2048))
-ROOTSTART=$(($BOOTSTART+($BOOTSIZE*2048)))
-BOOTEND=$(($ROOTSTART-1))
-
-LABELBOOT=${LABELBOOT:-boot}
-LABELFS=${LABELFS:-udoobuntu}
+FATPARTSIZE="32"
+FATPARTSTART=$(($OFFSET*2048))
+ROOTSTART=$(($FATPARTSTART+($FATPARTSIZE*2048)))
+FATPARTEND=$(($ROOTSTART-1))
 
 echo -e "${GREENBOLD}Creating image partitions...${RST}" >&1 >&2
-# Create partitions and file-system
 parted -s $LOOP -- mklabel msdos
-parted -s $LOOP -- mkpart primary fat16  $BOOTSTART"s" $BOOTEND"s"
+parted -s $LOOP -- mkpart primary fat16  $FATPARTSTART"s" $FATPARTEND"s"
 parted -s $LOOP -- mkpart primary ext4  $ROOTSTART"s" -1s
 partprobe $LOOP
-mkfs.vfat -n "$LABELBOOT" $LOOP"p1" >/dev/null 2>&1
-mkfs.ext4 -q $LOOP"p2" -L "$LABELFS"
+mkfs.vfat -n "UDOO" $LOOP"p1" >/dev/null 2>&1
+mkfs.ext4 -q $LOOP"p2" -L "UDOObuntu"
 
 mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
 
-for i in boot dev proc run mnt tmp
+for i in boot usbstorage dev proc run mnt tmp
   do mkdir -p "sdcard/$i"
 done
     
 chmod o+t,ugo+rw sdcard/tmp
-mount "${LOOP}p1" sdcard/boot
+mount "${LOOP}p1" sdcard/usbstorage
 
 rm -rf "$ROOTFS/home/ubuntu" #temp fix, we need to move the files later
 
@@ -84,11 +79,11 @@ ln -s /run/network sdcard/etc/network/run
 mkdir sdcard/var/tmp
 chmod o+t,ugo+rw sdcard/var/tmp
 
-echo -e "${GREENBOLD}Writing U-BOOT...${RST}" >&1 >&2
+echo -e "${GREENBOLD}Writing U-Boot...${RST}" >&1 >&2
 dd if=boards/$BOARD/uboot.imx of="$LOOP" bs=1k seek=1
 sync
 
-umount -lf sdcard/boot
+umount -lf sdcard/usbstorage
 umount -lf sdcard
 
 losetup -d "$LOOP"
