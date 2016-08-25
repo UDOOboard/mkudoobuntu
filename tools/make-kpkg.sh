@@ -77,7 +77,8 @@ Provides: linux-image, linux-image-2.6, linux-firmware
 Maintainer: UDOO Team <social@udoo.org>
 Installed-Size: $SIZE
 Section: kernel
-Priority: optional
+Essential: yes
+Priority: required
 Description: The Linux Kernel, patched to run on UDOO boards
 END
 
