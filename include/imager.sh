@@ -25,7 +25,7 @@
 checkroot
 
 umountroot
-umount -lf sdcard/usbstorage
+umount -lf sdcard/otgstorage
 umount -lf sdcard
 
 #guessing sd image size..
@@ -63,12 +63,12 @@ mkfs.ext4 -q $LOOP"p2" -L "UDOObuntu"
 mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
 
-for i in boot usbstorage dev proc run mnt tmp
+for i in boot otgstorage dev proc run mnt tmp
   do mkdir -p "sdcard/$i"
 done
     
 chmod o+t,ugo+rw sdcard/tmp
-mount "${LOOP}p1" sdcard/usbstorage
+mount "${LOOP}p1" sdcard/otgstorage
 
 rm -rf "$ROOTFS/home/ubuntu" #temp fix, we need to move the files later
 
@@ -83,7 +83,7 @@ echo -e "${GREENBOLD}Writing U-Boot...${RST}" >&1 >&2
 dd if=boards/$BOARD/uboot.imx of="$LOOP" bs=1k seek=1
 sync
 
-umount -lf sdcard/usbstorage
+umount -lf sdcard/otgstorage
 umount -lf sdcard
 
 losetup -d "$LOOP"

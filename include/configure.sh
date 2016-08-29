@@ -145,9 +145,8 @@ install -m 644 patches/network-interfaces "$ROOTFS/etc/network/interfaces"
 install -m 644 patches/hosts "$ROOTFS/etc/hosts"
 sed -e "s/THISHOST/$HOSTNAME/g" -i "$ROOTFS/etc/hosts"
 
-mkdir -p "$ROOTFS/usbstorage"
-cp boards/$BOARD/uEnv.txt $ROOTFS/usbstorage/uEnv.txt
-chroot "$ROOTFS/" /bin/bash -c "ln -s /usbstorage/uEnv.txt /boot/uEnv.txt"
+cp boards/$BOARD/uEnv.txt $ROOTFS/otgstorage/uEnv.txt
+chroot "$ROOTFS/" /bin/bash -c "ln -s /otgstorage/uEnv.txt /boot/uEnv.txt"
 
 if package_installed "update-manager"; then
 	# remove updates from motd and autostart

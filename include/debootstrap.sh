@@ -110,6 +110,7 @@ else
     mountroot
 fi
 
+mkdir -p "$ROOTFS/otgstorage"
 echo -e "${GREENBOLD}Installing core packages...${RST}" >&1 >&2
 chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive apt -y install --no-install-recommends ${BASE_PACKAGES[*]}"
 
