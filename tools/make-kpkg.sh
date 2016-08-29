@@ -108,6 +108,7 @@ mkdir -p "$kernel_headers_dir/lib/modules/$KERNEL_VERSION/"
 (cp .config $destdir/.config) # copy .config manually to be where it's expected to be
 ln -sf "/usr/src/linux-headers-$KERNEL_VERSION" "$kernel_headers_dir/lib/modules/$KERNEL_VERSION/build"
 rm -f "$objtree/debian/hdrsrcfiles" "$objtree/debian/hdrobjfiles"
+rm -rf $objtree/ROOT/lib
 
 cat <<EOF >> $objtree/ROOT/DEBIAN/control
 Package: $KERNEL_NAME-headers
