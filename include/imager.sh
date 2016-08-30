@@ -70,8 +70,6 @@ done
 chmod o+t,ugo+rw sdcard/tmp
 mount "${LOOP}p1" sdcard/otgstorage
 
-rm -rf "$ROOTFS/home/ubuntu" #temp fix, we need to move the files later
-
 echo -e "${GREENBOLD}Copying filesystem on SD image...${RST}" >&1 >&2
 rsync -a --exclude run --exclude tmp --exclude qemu-arm-static "$ROOTFS/" sdcard/
 ln -s /run sdcard/var/run
