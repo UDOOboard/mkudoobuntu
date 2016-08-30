@@ -125,6 +125,19 @@ checkroot() {
   fi
 }
 
+checkversions() {
+  grep xenial /etc/lsb-release
+  RES=$?
+  if [ $RES -gt 0 ] ; then
+    echo "WARNING: Only Ubuntu Xenial is supported!"
+  fi
+
+  VERSION=`dpkg-query --show --showformat '${Version}' qemu-user-static`
+  if dpkg --compare-versions $VERSION lt 1:2.6 ; then
+    echo "WARNING: qemu version must be at least 2.6!"
+  fi
+}
+
 checkPackage() {
   declare -a PACKAGES
   for i in ${HOST_PACKAGES[*]}
@@ -274,10 +287,6 @@ case $1 in
             list) shift
                 listdeb && ok
             ;;
-            debootstrap)
-                source include/debootstrap.sh
-                ok
-            ;;
             reimage)
                 source include/imager.sh
                 ok
@@ -287,6 +296,7 @@ case $1 in
             ;;
             *)
                 checkroot
+                checkversions
                 debootstrapfull $@
                 ok
             ;;
