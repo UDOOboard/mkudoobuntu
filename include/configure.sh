@@ -48,8 +48,11 @@ sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/' "$ROOTFS/etc/ss
 # fix selinux
 mkdir -p "$ROOTFS/selinux"
 
-# remove what's anyway not working
+# remove what's not working
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable ureadahead.service"
+# remove what's slow
+chroot "$ROOTFS/" /bin/bash -c "systemctl disable NetworkManager-wait-online.service"
+chroot "$ROOTFS/" /bin/bash -c "systemctl disable sys-kernel-debug.mount"
 
 if [ "$BOARD" = "udoo-neo" ]; then
 	#enable otg gadget
