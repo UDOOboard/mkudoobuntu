@@ -126,7 +126,7 @@ checkroot() {
 }
 
 checkversions() {
-  grep xenial /etc/lsb-release
+  grep -q xenial /etc/lsb-release
   RES=$?
   if [ $RES -gt 0 ] ; then
     echo "WARNING: Only Ubuntu Xenial is supported!"
