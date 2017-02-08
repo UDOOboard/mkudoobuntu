@@ -78,7 +78,7 @@ Maintainer: UDOO Team <social@udoo.org>
 Installed-Size: $SIZE
 Section: kernel
 Essential: yes
-Priority: required
+Priority: optional
 Description: The Linux Kernel, patched to run on UDOO boards
 END
 
