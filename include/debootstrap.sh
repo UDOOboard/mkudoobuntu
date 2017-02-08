@@ -76,7 +76,6 @@ else
     install -m 644 patches/apt/sources.list      "$ROOTFS/etc/apt/sources.list"
     install -m 644 patches/apt/udoo.list         "$ROOTFS/etc/apt/sources.list.d/udoo.list"
     install -m 644 patches/apt/nodejs.list       "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
-    install -m 644 patches/apt/wyliodrin.list    "$ROOTFS/etc/apt/sources.list.d/wyliodrin.list"
     install -m 644 patches/apt/udoo.preferences  "$ROOTFS/etc/apt/preferences.d/udoo"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list"
     sed -e "s/UBUNTURELEASE/$UBUNTURELEASE/g" -i "$ROOTFS/etc/apt/sources.list.d/nodejs.list"
