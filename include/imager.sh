@@ -58,7 +58,7 @@ parted -s $LOOP -- mkpart primary fat16  $FATPARTSTART"s" $FATPARTEND"s"
 parted -s $LOOP -- mkpart primary ext4  $ROOTSTART"s" -1s
 partprobe $LOOP
 mkfs.vfat -n "UDOO" $LOOP"p1" >/dev/null 2>&1
-mkfs.ext4 -q $LOOP"p2" -L "UDOObuntu"
+mkfs.ext4 -O ^64bit -q $LOOP"p2" -L "UDOObuntu"
 
 mkdir sdcard 2> /dev/null
 mount $LOOP"p2" sdcard
