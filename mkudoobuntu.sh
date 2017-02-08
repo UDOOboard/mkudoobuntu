@@ -25,38 +25,38 @@
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
 BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1 udoo-firstrun
-  bluez blueman curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils 
-  vlan wireless-tools wget wpasupplicant unicode-data console-data console-common 
-  pv sysfsutils cpufrequtils ntfs-3g locate command-not-found man-db git i2c-tools 
-  python-pip vim minicom crda manpages systemd systemd-shim wireless-regdb
-  udoo-gpio-export hostapd dtweb )
+  curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils vlan 
+  wireless-tools wget wpasupplicant unicode-data console-data console-common 
+  sysfsutils cpufrequtils locate man-db vim crda manpages systemd systemd-shim 
+  wireless-regdb udoo-gpio-export hostapd )
 
 # VPU/Common
 BASE_PACKAGES+=( firmware-imx-12x imx-codec-12x imx-parser-12x imx-vpuwrap-12x 
   imx-lib-12x imx-alsa-plugins-12x imx-vpu-12x imx-vpu-cnm-12x imx-udev-rules-x10 )
 
-# Development libraries
-BASE_PACKAGES+=( python-serial librxtx-java automake default-jdk )
+# Base and development libraries
+PACKAGES_minimal=( python-serial librxtx-java automake default-jdk git 
+  command-not-found python-pip minicom ntfs-3g i2c-tools pv bluez blueman )
 
 # Desktop
-DESKTOP_PACKAGES+=( imx-gpu-viv-x10-acc-x11 xserver-xorg-core xserver-common
+PACKAGES_desktop=( imx-gpu-viv-x10-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev lubuntu-core leafpad lxterminal galculator lxtask 
   lxappearance lxrandr lxshortcut lxinput lubuntu-software-center lxde-common 
   lxde-core update-manager evince transmission-gtk abiword file-roller libmtp-runtime 
-  scratch eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  matchbox-keyboard socat )
+  eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
+  matchbox-keyboard socat dtweb ${PACKAGES_minimal[*]} )
 
 # gstreamer
-DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
+PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
   gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly 
   gstreamer1.0-alsa )
 
 # chromium
-DESKTOP_PACKAGES+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
+PACKAGES_desktop+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
   chromium-codecs-ffmpeg-extra )
 
 # From install recommends
-DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon desktop-base 
+PACKAGES_desktop+=( alsa-base accountsservice avahi-daemon desktop-base 
   dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
   gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
   indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
@@ -65,8 +65,6 @@ DESKTOP_PACKAGES+=( alsa-base accountsservice avahi-daemon desktop-base
   pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
   session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
   gnome-keyring zenity zenity-common )
-
-UDOOLXDE=${DESKTOP_PACKAGES[*]}
 
 UNWANTED_PACKAGES=( valgrind )
 
