@@ -124,10 +124,10 @@ checkroot() {
 }
 
 checkversions() {
-  grep -q xenial /etc/lsb-release
+  grep -q yakkety /etc/lsb-release
   RES=$?
   if [ $RES -gt 0 ] ; then
-    echo "WARNING: Only Ubuntu Xenial is supported!"
+    echo "WARNING: Only Ubuntu Yakkety is supported!"
   fi
 
   VERSION=`dpkg-query --show --showformat '${Version}' qemu-user-static`
