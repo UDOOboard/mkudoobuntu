@@ -1,6 +1,6 @@
 ## mkudoobuntu
-This script creates SD-card images for UDOO boards. It supports both desktop and 
-headless images. The created images are as small as possible and expanded to the 
+This script creates SD-card images for UDOO boards. It supports both desktop and
+headless images. The created images are as small as possible and expanded to the
 whole card size during the first boot.
 
 ### Usage
@@ -24,19 +24,19 @@ To edit a previously debootstrapped rootfs, use:
  * `list`: List installed pkg in rootfs
  * `reimage`: Make a new image from a modified rootfs
  * `shell`: Open an interactive shell in a rootfs
-    
+
 ### Prerequisites
-This script has been tested on Ubuntu 15.10, 15.04 and 14.04. 
+This script has been tested on Ubuntu 16.10, 16.04, 15.10, 15.04 and 14.04. 
 It may work on other Debian-like system.
 
 ### Supported boards
-1. UDOO Quad 
+1. UDOO Quad
 2. UDOO Dual
 3. UDOO Neo (Basic, Extended, Full)
 
 ### Misc sources
 Original work:
-https://github.com/igorpecovnik/lib 
+https://github.com/igorpecovnik/lib
 
 U-Boot:
 https://github.com/UDOOboard/uboot-imx
