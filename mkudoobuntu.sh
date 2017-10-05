@@ -24,18 +24,23 @@
 
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
-BASE_PACKAGES=( openssh-server alsa-utils bash-completion policykit-1 udoo-firstrun
-  curl dosfstools fbset iw nano module-init-tools ntp unzip usbutils vlan 
-  wireless-tools wget wpasupplicant unicode-data console-data console-common 
-  sysfsutils cpufrequtils locate man-db vim crda manpages systemd systemd-shim 
-  wireless-regdb udoo-gpio-export hostapd )
+BASE_PACKAGES=( bash-completion unicode-data console-data console-common 
+  openssh-server nano vim wget unzip
+  iw wireless-tools wpasupplicant crda wireless-regdb
+  module-init-tools ntp usbutils sysfsutils cpufrequtils manpages systemd systemd-shim
+  udoo-firstrun udoo-gpio-export
+  firmware-imx-12x imx-lib-12x imx-udev-rules-x10 )
+
+PACKAGES_micro=()
+
+PACKAGES_minimal+=( alsa-utils curl dosfstools fbset locate man-db hostapd policykit-1 vlan )
 
 # VPU/Common
-BASE_PACKAGES+=( firmware-imx-12x imx-codec-12x imx-parser-12x imx-vpuwrap-12x 
-  imx-lib-12x imx-alsa-plugins-12x imx-vpu-12x imx-vpu-cnm-12x imx-udev-rules-x10 )
+PACKAGES_minimal=( imx-codec-12x imx-parser-12x imx-vpuwrap-12x imx-alsa-plugins-12x
+  imx-vpu-12x imx-vpu-cnm-12x )
 
 # Base and development libraries
-PACKAGES_minimal=( python-serial librxtx-java automake default-jdk git 
+PACKAGES_minimal+=( python-serial librxtx-java automake default-jdk git 
   command-not-found python-pip minicom ntfs-3g i2c-tools pv bluez blueman )
 
 # Desktop
