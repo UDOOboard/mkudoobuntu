@@ -84,9 +84,7 @@ else
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5" #ubuntu
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32" #ubuntu
     chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1655A0AB68576280" #nodejs
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 71F0E740"         #udoo
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com FFDAB760"         #udoo extras
-    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 50ED82B9"         #udoo
+    chroot "$ROOTFS/" /bin/bash -c "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 8878478B"         #udoo
 
     echo -e "${GREENBOLD}Updating APT repositories...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "apt update"
