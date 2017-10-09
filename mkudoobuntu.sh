@@ -29,7 +29,7 @@ BASE_PACKAGES=( bash-completion unicode-data console-data console-common
   iw wireless-tools wpasupplicant crda wireless-regdb
   module-init-tools ntp usbutils sysfsutils cpufrequtils manpages systemd systemd-shim
   udoo-firstrun udoo-gpio-export
-  firmware-imx-12x imx-lib-12x imx-udev-rules-x10 )
+  firmware-imx-12x imx-lib-12x imx-udev-rules-x12 )
 
 PACKAGES_micro=()
 
@@ -40,19 +40,19 @@ PACKAGES_minimal=( imx-codec-12x imx-parser-12x imx-vpuwrap-12x imx-alsa-plugins
   imx-vpu-12x imx-vpu-cnm-12x )
 
 # Base and development libraries
-PACKAGES_minimal+=( python-serial librxtx-java automake default-jdk git 
-  command-not-found python-pip minicom ntfs-3g i2c-tools pv bluez blueman )
+PACKAGES_minimal+=( python-pip python-serial automake default-jdk git minicom 
+   ntfs-3g i2c-tools pv bluez )
 
 # Desktop
-PACKAGES_desktop=( imx-gpu-viv-x10-acc-x11 xserver-xorg-core xserver-common
+PACKAGES_desktop=( imx-gpu-viv-x12-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev lubuntu-core leafpad lxterminal galculator lxtask 
   lxappearance lxrandr lxshortcut lxinput lubuntu-software-center lxde-common 
   lxde-core update-manager evince transmission-gtk abiword file-roller libmtp-runtime 
   eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  matchbox-keyboard socat dtweb ${PACKAGES_minimal[*]} )
+  matchbox-keyboard socat dtweb blueman ${PACKAGES_minimal[*]} )
 
 # gstreamer
-PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
+PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx-x11 
   gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly 
   gstreamer1.0-alsa )
 

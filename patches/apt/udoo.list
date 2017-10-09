@@ -1,2 +1,2 @@
-deb http://repository-test.udoo.org/xenial xenial main
-deb-src http://repository-test.udoo.org/xenial xenial main
+deb http://repository-test.udoo.org/xenial udoobuntu main
+deb-src http://repository-test.udoo.org/xenial udoobuntu main

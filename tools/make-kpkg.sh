@@ -54,7 +54,7 @@ mkdir -p $TEMP/lib/modules
 mkdir -p $TEMP/DEBIAN
 
 # echo "Cleaning kernel..."
-# ARCH=arm make clean
+ARCH=arm make clean
 
 echo "Building kernel..."
 ARCH=arm make $defconfig
@@ -77,7 +77,6 @@ Provides: linux-image, linux-image-2.6, linux-firmware
 Maintainer: UDOO Team <social@udoo.org>
 Installed-Size: $SIZE
 Section: kernel
-Essential: yes
 Priority: optional
 Description: The Linux Kernel, patched to run on UDOO boards
 END
