@@ -75,39 +75,40 @@ fi
 chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
+
+echo 'PS1="\[\e[01;31m\]$PS1\[\e[00m\]"' >> "$ROOTFS/root/.bashrc"
+
+
 if package_installed "xserver-xorg-core"; then
 	echo -e "${GREENBOLD}Configuring desktop...${RST}" >&1 >&2
-	
+
 	# touchscreen conf
 	install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
 	install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 	install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
 
-	#fix autostart https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/1188131
-	sed -i 's/and plymouth-ready//' "$ROOTFS/etc/init/lightdm.conf"
-	mkdir -p "$ROOTFS/etc/lightdm/lightdm.conf.d"
-	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
+	# autologin
+	mkdir -p "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d"
+	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d/10-autologin.conf"
 	install -m 644 patches/x11vnc.conf "$ROOTFS/etc/init/x11vnc.conf"
-	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/lightdm/lightdm.conf.d/10-autologin.conf"
-	install -m 644 patches/autologin.accountservice "$ROOTFS/var/lib/AccountsService/users/$USERNAMEPWD"
+	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d/10-autologin.conf"
 
-	#wallpaper
-	WALLPAPER_OLD="/usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png"
-	WALLPAPER_NEW="/usr/share/wallpapers/udoo/UDOO-fresh.png"
-	sed -e "s|$WALLPAPER_OLD|$WALLPAPER_NEW|" -i "$ROOTFS/etc/xdg/pcmanfm/lubuntu/pcmanfm.conf"
+  # desktop settings
+	mkdir -p "$ROOTFS/etc/dconf/profile"
+	install -m 644 patches/dconf/user "$ROOTFS/etc/dconf/profile/user"
+	mkdir -p "$ROOTFS/etc/dconf/db/local.d"
+	install -m 644 patches/dconf/udoo "$ROOTFS/etc/dconf/db/local.d/udoo"
+	chroot "$ROOTFS/" /bin/bash -c "dconf update"
 
 	#desktop icons
-	install -m 755 -o 1000 -g 1000 -d "$ROOTFS/home/$USERNAMEPWD/Desktop"
-	for APP in lxterminal arduino inputmethods/matchbox-keyboard update-manager; do
-		install -m 644 -o 1000 "$ROOTFS/usr/share/applications/$APP.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
-	done
-	
-	if package_installed "chromium-egl"; then
-		chroot "$ROOTFS/" /bin/bash -c "update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/chromium-egl 50"
-		chroot "$ROOTFS/" /bin/bash -c "update-alternatives --set  x-www-browser /usr/bin/chromium-egl"
-	fi
+	#install -m 755 -o 1000 -g 1000 -d "$ROOTFS/home/$USERNAMEPWD/Desktop"
+	#for APP in lxterminal arduino inputmethods/matchbox-keyboard update-manager; do
+	#	install -m 644 -o 1000 "$ROOTFS/usr/share/applications/$APP.desktop" "$ROOTFS/home/$USERNAMEPWD/Desktop/"
+	#done
+	#chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
-	chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
+	# ugly hack, remove me!
+	chroot "$ROOTFS/" /bin/bash -c "ln -sf /usr/lib/jni/arm-linux-gnueabihf/libastylej.so /usr/share/arduino/lib/libastylej.so"
 
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
@@ -137,7 +138,7 @@ UDOObuntu v$RELEASE
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE
 else
-cat << ISSUE >> "$ROOTFS/etc/issue" 
+cat << ISSUE >> "$ROOTFS/etc/issue"
 
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE

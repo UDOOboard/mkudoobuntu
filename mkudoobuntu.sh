@@ -24,52 +24,47 @@
 
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
-BASE_PACKAGES=( bash-completion unicode-data console-data console-common 
-  openssh-server nano vim wget unzip
+BASE_PACKAGES=( bash-completion unicode-data console-data console-common
+  openssh-server nano wget unzip zip ntp
   iw wireless-tools wpasupplicant crda wireless-regdb
-  module-init-tools ntp usbutils sysfsutils cpufrequtils manpages systemd systemd-shim
-  udoo-firstrun udoo-gpio-export
-  firmware-imx-12x imx-lib-12x imx-udev-rules-x12 )
+  udoo-firstrun udoo-gpio-export firmware-imx-12x imx-lib-12x imx-udev-rules-x12 )
 
 PACKAGES_micro=()
 
-PACKAGES_minimal+=( alsa-utils curl dosfstools fbset locate man-db hostapd policykit-1 vlan )
+PACKAGES_minimal=( alsa-utils curl dosfstools fbset locate man-db hostapd policykit-1 vlan
+  vim usbutils sysfsutils cpufrequtils manpages )
 
 # VPU/Common
-PACKAGES_minimal=( imx-codec-12x imx-parser-12x imx-vpuwrap-12x imx-alsa-plugins-12x
+PACKAGES_minimal+=( imx-codec-12x imx-parser-12x imx-vpuwrap-12x imx-alsa-plugins-12x
   imx-vpu-12x imx-vpu-cnm-12x )
 
 # Base and development libraries
-PACKAGES_minimal+=( python-pip python-serial automake default-jdk git minicom 
+PACKAGES_minimal+=( python-pip python-serial automake git minicom
    ntfs-3g i2c-tools pv bluez )
 
 # Desktop
-PACKAGES_desktop=( imx-gpu-viv-x12-acc-x11 xserver-xorg-core xserver-common
-  xserver-xorg-dev libdrm-dev lubuntu-core leafpad lxterminal galculator lxtask 
-  lxappearance lxrandr lxshortcut lxinput lubuntu-software-center lxde-common 
-  lxde-core update-manager evince transmission-gtk abiword file-roller libmtp-runtime 
-  eog geany bluefish pavucontrol udoo-artwork xinput-calibrator x11vnc
-  matchbox-keyboard socat dtweb blueman ${PACKAGES_minimal[*]} )
+PACKAGES_desktop=( xserver-xorg xserver-xorg-core xserver-common
+  lightdm lightdm-gtk-greeter
+  imx-gpu-viv-x12-acc-x11 dpkg-dev
+  mate-desktop-environment-core
+  ubuntu-mate-themes mate-system-monitor mate-applets mate-tweak mate-media dmz-cursor-theme
+
+  gnome-system-tools network-manager network-manager-gnome pulseaudio
+  caja-gksu engrampa eom pluma galculator geany socat
+  udoo-artwork xinput-calibrator xterm x11vnc dtweb
+  gir1.2-secret-1 gnome-keyring
+
+  onboard python3-pyatspi gir1.2-appindicator3-0.1 # on screen keyboard
+  alsa-base dialog zenity zenity-common gvfs-fuse ibus iptables mousetweaks
+   ${PACKAGES_minimal[*]} )
 
 # gstreamer
-PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx-x11 
-  gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly 
+PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx-x11
+  gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly
   gstreamer1.0-alsa )
 
 # chromium
-PACKAGES_desktop+=( chromium-browser chromium-browser-l10n chromium-chromedriver 
-  chromium-codecs-ffmpeg-extra )
-
-# From install recommends
-PACKAGES_desktop+=( alsa-base accountsservice avahi-daemon desktop-base 
-  dialog fonts-liberation gnome-bluetooth gnome-menus gnome-screensaver gnome-user-share
-  gvfs-fuse ibus ibus-gtk ibus-gtk3 iptables indicator-applet indicator-application 
-  indicator-bluetooth indicator-datetime indicator-keyboard indicator-messages 
-  indicator-power indicator-session indicator-sound mousetweaks network-manager 
-  network-manager-gnome obconf policykit-1-gnome pulseaudio 
-  pulseaudio-module-x11 pulseaudio-utils samba-common samba-common-bin sessioninstaller 
-  session-migration smbclient ssl-cert ubuntu-system-service update-inetd xfonts-scalable 
-  gnome-keyring zenity zenity-common )
+PACKAGES_desktop+=( chromium-browser chromium-codecs-ffmpeg-extra )
 
 UNWANTED_PACKAGES=( valgrind )
 
