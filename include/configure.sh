@@ -48,19 +48,12 @@ sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/' "$ROOTFS/etc/ss
 # fix selinux
 mkdir -p "$ROOTFS/selinux"
 
-# remove what's not working
+# remove startup services
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable ureadahead.service"
-# remove what's slow
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable NetworkManager-wait-online.service"
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable sys-kernel-debug.mount"
 
-if [ "$BOARD" = "udoo-neo" ]; then
-	#enable otg gadget
-	install -m 744 patches/g_multi.sh "$ROOTFS/usr/sbin/g_multi.sh"
-	install -m 744 patches/g_multi.conf "$ROOTFS/etc/init/g_multi.conf"
-fi
-
-install -m 755 patches/rc.local "$ROOTFS/etc/rc.local"
+# fstab
 install -m 644 patches/fstab "$ROOTFS/etc/fstab"
 
 # setup users

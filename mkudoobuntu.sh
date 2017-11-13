@@ -25,11 +25,11 @@
 HOST_PACKAGES=( debootstrap qemu-user-static apt-cacher-ng rsync )
 
 BASE_PACKAGES=( bash-completion unicode-data console-data console-common
-  openssh-server nano wget unzip zip ntp
+  openssh-server nano wget unzip zip ntp udoo-autostart
   iw wireless-tools wpasupplicant crda wireless-regdb
   udoo-firstrun udoo-gpio-export firmware-imx-12x imx-lib-12x imx-udev-rules-x12 )
 
-PACKAGES_micro=()
+PACKAGES_micro=( )
 
 PACKAGES_minimal=( alsa-utils curl dosfstools fbset locate man-db hostapd policykit-1 vlan
   vim usbutils sysfsutils cpufrequtils manpages )
