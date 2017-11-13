@@ -55,8 +55,7 @@ PACKAGES_desktop=( xserver-xorg xserver-xorg-core xserver-common
   gir1.2-secret-1 gnome-keyring
 
   onboard python3-pyatspi gir1.2-appindicator3-0.1 # on screen keyboard
-  alsa-base dialog zenity zenity-common gvfs-fuse ibus iptables mousetweaks
-   ${PACKAGES_minimal[*]} )
+  alsa-base dialog zenity zenity-common gvfs-fuse ibus iptables mousetweaks )
 
 # gstreamer
 PACKAGES_desktop+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx-x11
@@ -117,22 +116,16 @@ usageerror() {
 }
 
 checkroot() {
-  if [ $(id -u) -ne 0 ] 
+  if [ $(id -u) -ne 0 ]
   then
     error "You're not root! Try execute: sudo $0"
   fi
 }
 
 checkversions() {
-  grep -q yakkety /etc/lsb-release
-  RES=$?
-  if [ $RES -gt 0 ] ; then
-    echo "WARNING: Only Ubuntu Yakkety is supported!"
-  fi
-
   VERSION=`dpkg-query --show --showformat '${Version}' qemu-user-static`
-  if dpkg --compare-versions $VERSION lt 1:2.6 ; then
-    echo "WARNING: qemu version must be at least 2.6!"
+  if dpkg --compare-versions $VERSION lt 1:2.8 ; then
+    echo "WARNING: qemu version must be at least 2.8!"
   fi
 }
 
@@ -272,7 +265,10 @@ case $1 in
         source boards/$1/board.conf
         BOARD=$1
         ROOTFS=$1
-        
+
+	PACKAGES_minimal=(${PACKAGES_minimal[*]} ${PACKAGES_micro[*]})
+	PACKAGES_desktop=(${PACKAGES_desktop[*]} ${PACKAGES_minimal[*]})
+
         shift
         #other argument
         case $1 in
