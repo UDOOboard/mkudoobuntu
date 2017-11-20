@@ -46,12 +46,13 @@ PACKAGES_minimal+=( python-pip python-serial automake git minicom
 PACKAGES_desktop=( xserver-xorg xserver-xorg-core xserver-common
   lightdm lightdm-gtk-greeter
   imx-gpu-viv-x12-acc-x11 dpkg-dev
-  mate-desktop-environment-core
-  ubuntu-mate-themes mate-system-monitor mate-applets mate-tweak mate-media dmz-cursor-theme
+  caja marco mate-control-center mate-desktop mate-icon-theme mate-menus mate-panel mate-polkit
+  mate-session-manager mate-settings-daemon mate-terminal ubuntu-mate-themes mate-system-monitor
+  mate-applets mate-tweak mate-media dmz-cursor-theme
 
   gnome-system-tools network-manager network-manager-gnome pulseaudio
   caja-gksu engrampa eom pluma galculator geany socat
-  udoo-artwork xinput-calibrator xterm x11vnc dtweb
+  udoo-artwork xinput-calibrator xterm udoo-vncserver dtweb
   gir1.2-secret-1 gnome-keyring
 
   onboard python3-pyatspi gir1.2-appindicator3-0.1 # on screen keyboard
