@@ -42,6 +42,7 @@ mkdir -p "$ROOTFS/selinux"
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable ureadahead.service"
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable NetworkManager-wait-online.service"
 chroot "$ROOTFS/" /bin/bash -c "systemctl disable sys-kernel-debug.mount"
+chroot "$ROOTFS/" /bin/bash -c "systemctl disable isc-dhcp-server6.service"
 
 # fstab
 install -m 644 patches/fstab "$ROOTFS/etc/fstab"
@@ -58,29 +59,20 @@ fi
 chroot "$ROOTFS/" /bin/bash -c "echo $USERNAMEPWD:$USERNAMEPWD | chpasswd"
 chroot "$ROOTFS/" /bin/bash -c "chsh -s /bin/bash $USERNAMEPWD"
 
-
-echo 'PS1="\[\e[01;31m\]$PS1\[\e[00m\]"' >> "$ROOTFS/root/.bashrc"
-
-
 if package_installed "xserver-xorg-core"; then
 	echo -e "${GREENBOLD}Configuring desktop...${RST}" >&1 >&2
 
 	# touchscreen conf
-	install -m 755 -d "$ROOTFS/etc/X11/xorg.conf.d/"
-	install -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
-	install -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/"
+	install -D -m 744 patches/90-st1232touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/90-st1232touchscreen.conf"
+	install -D -m 744 patches/91-3m_touchscreen.conf "$ROOTFS/etc/X11/xorg.conf.d/91-3m_touchscreen.conf"
 
 	# autologin
-	mkdir -p "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d"
-	install -m 644 patches/autologin.lightdm "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d/10-autologin.conf"
-	install -m 644 patches/x11vnc.conf "$ROOTFS/etc/init/x11vnc.conf"
+	install -D -m 644 patches/autologin.lightdm "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d/10-autologin.conf"
 	sed -e "s/USERNAMEPWD/$USERNAMEPWD/g" -i "$ROOTFS/etc/xdg/lightdm/lightdm.conf.d/10-autologin.conf"
 
-  # desktop settings
-	mkdir -p "$ROOTFS/etc/dconf/profile"
-	install -m 644 patches/dconf/user "$ROOTFS/etc/dconf/profile/user"
-	mkdir -p "$ROOTFS/etc/dconf/db/local.d"
-	install -m 644 patches/dconf/udoo "$ROOTFS/etc/dconf/db/local.d/udoo"
+	# desktop settings
+	install -D -m 644 patches/dconf/user "$ROOTFS/etc/dconf/profile/user"
+	install -D -m 644 patches/dconf/udoo "$ROOTFS/etc/dconf/db/local.d/udoo"
 	chroot "$ROOTFS/" /bin/bash -c "dconf update"
 
 	#desktop icons
@@ -110,13 +102,14 @@ sed -e 's/# "\\e\[6~": history\-search\-forward/"\\e[6~": history-search-forward
 sed -e '/#if ! shopt -oq posix/,+6s/#//' -i "$ROOTFS/etc/bash.bashrc"
 echo "alias grep='grep --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
 echo "alias ls='ls --color=auto'" >> "$ROOTFS/etc/bash.bashrc"
+echo 'PS1="\[\e[01;31m\]$PS1\[\e[00m\]"' >> "$ROOTFS/root/.bashrc"
 
 # set hostname
 echo $HOSTNAME > "$ROOTFS/etc/hostname"
 
 if [ -n "$RELEASE" ]; then
 cat << ISSUE > "$ROOTFS/etc/issue"
-UDOObuntu v$RELEASE
+UDOObuntu $RELEASE
 
 default username:password is [$USERNAMEPWD:$USERNAMEPWD]
 ISSUE
