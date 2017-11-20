@@ -141,4 +141,7 @@ fi
 install -m 755 patches/10-help-text "$ROOTFS/etc/update-motd.d/10-help-text"
 chroot "$ROOTFS/" /bin/bash -c "run-parts /etc/update-motd.d/"
 
+echo -e "${GREENBOLD}Configuring ca-certificates...${RST}" >&1 >&2
+chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive dpkg-reconfigure ca-certificates"
+
 umountroot

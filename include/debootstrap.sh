@@ -54,9 +54,9 @@ else
                  $UBUNTURELEASE "$ROOTFS" http://127.0.0.1:3142/ports.ubuntu.com
 
     (( $? )) && error "Debootstrap exited with error $?"
-                 
-    echo -e "${GREENBOLD}Configuring keyring...${RST}" >&1 >&2
     cp /usr/bin/qemu-arm-static "$ROOTFS/usr/bin"
+
+    echo -e "${GREENBOLD}Configuring keyring...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "dpkg -i /var/cache/apt/archives/ubuntu-keyring*.deb"
     echo -e "${GREENBOLD}Resuming debootstrap...${RST}" >&1 >&2
     chroot "$ROOTFS/" /bin/bash -c "/debootstrap/debootstrap --second-stage"
@@ -99,7 +99,9 @@ else
     chroot "$ROOTFS/" /bin/bash -c "export LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8"
     chroot "$ROOTFS/" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive"
     chroot "$ROOTFS/" /bin/bash -c "update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_MESSAGES=POSIX"
-    
+
+    chroot "$ROOTFS/" /bin/bash -c "PATH=/fake:$PATH DEBIAN_FRONTEND=noninteractive dpkg-reconfigure ca-certificates"
+
     umountroot
     echo -e -n "${GREENBOLD}Board-indipendent debootstrap complete! Creating a backup... ${RST}" >&1 >&2
     tar -czpf "debootstrap_${UBUNTURELEASE}_$(date +%Y%m%d%H%M).tar.gz" -C "$ROOTFS" .
