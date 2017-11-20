@@ -72,4 +72,4 @@ enable-animations=false
 
 [org/mate/desktop/background]
 picture-options='zoom'
-picture-filename='/usr/share/wallpapers/udoo/UDOO-gray.png'
+picture-filename='/usr/share/backgrounds/udoo/UDOO-gray.png'
