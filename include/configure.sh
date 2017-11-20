@@ -32,16 +32,6 @@ package_installed() {
 
 echo -e "${GREENBOLD}Configuring system...${RST}" >&1 >&2
 
-# configure console
-echo -e "${GREENBOLD}Configuring console...${RST}" >&1 >&2
-install -m 744 patches/ttymxc0.conf "$ROOTFS/etc/init/ttymxc0.conf"
-install -m 744 patches/ttymxc1.conf "$ROOTFS/etc/init/ttymxc1.conf"
-install -m 744 patches/ttyGS0.conf "$ROOTFS/etc/init/ttyGS0.conf"
-rm -f "$ROOTFS/etc/init/tty3.conf"
-rm -f "$ROOTFS/etc/init/tty4.conf"
-rm -f "$ROOTFS/etc/init/tty5.conf"
-rm -f "$ROOTFS/etc/init/tty6.conf"
-
 # disable root login
 sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/' "$ROOTFS/etc/ssh/sshd_config"
 
