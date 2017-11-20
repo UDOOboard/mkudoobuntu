@@ -82,9 +82,6 @@ if package_installed "xserver-xorg-core"; then
 	#done
 	#chroot "$ROOTFS/" /bin/bash -c "chown $USERNAMEPWD:$USERNAMEPWD /home/$USERNAMEPWD/Desktop/*"
 
-	# ugly hack, remove me!
-	chroot "$ROOTFS/" /bin/bash -c "ln -sf /usr/lib/jni/arm-linux-gnueabihf/libastylej.so /usr/share/arduino/lib/libastylej.so"
-
 	if [ "$HOSTNAME" = "udooneo" ]; then
 		install -m 644 patches/neo-audio/asound.conf "$ROOTFS/etc/asound.conf"
 		install -m 644 patches/neo-audio/asound.state "$ROOTFS/var/lib/alsa/asound.state"
