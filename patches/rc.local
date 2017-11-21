@@ -15,4 +15,8 @@ if [ `date +"%Y"` -eq "1970" ]; then
 	date --set="2017-01-01"
 fi
 
+if [ -x "/udoo-autostart.sh" ]; then
+   /udoo-autostart.sh &
+fi
+
 exit 0
