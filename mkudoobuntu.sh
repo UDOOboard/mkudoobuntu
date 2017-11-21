@@ -66,7 +66,7 @@ DESKTOP_PACKAGES+=( imx-gpu-viv-9t6-acc-x11 xserver-xorg-core xserver-common
   xserver-xorg-dev libdrm-dev )
 
 #dev
-DESKTOP_PACKAGES+=( automake default-jdk )
+DESKTOP_PACKAGES+=( automake )
 
 #gstreamer
 DESKTOP_PACKAGES+=( gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer-imx 
